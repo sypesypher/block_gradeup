@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <script src="gradeupjs/heatmap2.js"></script>
+		<script src="gradeupjs/grades2.js"></script>
+		<script src="gradeupjs/burnup.js"></script>
+    </head>
+    <body style="background-color: rgb(119, 190, 187);">
+        <h2 style="font-size:30px; color:green; text-align:center">Gradeup 2</h2>
+        <div id="svgContainer"></div>
+		<div style="width:800px"> <canvas id="heatmapChart"> </canvas> </div>
+    </body>
+    <script>
+        //Normally a call to get data, but this will do for an example
+        function getData() {
+            let data = grades;
+            return data;
+        }
+		
+		let data = getData();
+		let scale = 600;
+		var draw = SVG().addTo('#svgContainer').size(scale+400,scale+100); //additional area for chart legend and assignment names
+		drawChart(scale,draw);
+		drawAssignments(scale, draw,data);
+
+        showHeatMap("heatmapChart",data);
+     </script>
+</html>
