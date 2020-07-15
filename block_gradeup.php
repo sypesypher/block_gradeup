@@ -11,8 +11,10 @@ class block_gradeup extends block_base {
 		  return $this->content;
 		}
 	 
-		$this->content         =  new stdClass;
-		$this->content->text   = 'The content of our SimpleHTML block!';
+		$this->content       =  new stdClass;
+		$this->content->text = 'The content of our test block!';
+		$this->content->text .= 'line 2 or same line?';
+		$this->content->text .= '<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>';
 		$this->content->footer = 'Footer here...';
 	 
 		return $this->content;
