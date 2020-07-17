@@ -14,7 +14,7 @@ function showHeatMap(elementId, grades) {
     gradient.addColorStop(1,'green');
 	
 	var warningIcon = new Image();
-	warningIcon.src = 'https://imgur.com/uR4K2lx';
+	warningIcon.src = 'https://imgur.com/uR4K2lx'; //TODO?
 
     var weeklyLoad = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     var weekLabels = ['week1','week2','week3','week4','week5','week6','week7','week8','week9','week10','week11','week12','week13','week14','week15','week16']
@@ -42,7 +42,7 @@ function showHeatMap(elementId, grades) {
     var chartOptions = {
         title: {
             display: true,
-            text: 'Heatmap Chart - Dev',
+            text: heatMapString,
             fontSize: 23,
 			fontColor: 'green'
         },
