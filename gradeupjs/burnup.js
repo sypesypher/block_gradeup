@@ -291,7 +291,7 @@ function drawChart(scale, svg){
 	
 	
 	let button = draw.polygon([[0,buttony] , [scale/5, buttony], [scale/5, buttony + scale /15], [ 0, buttony + scale /15]]);
-	button.fill('blue');
+	button.fill('lightblue');
 	button.click(function() {
 			console.log("onclick reset button");
 			for (let i=0; i<data.length; i++) {
@@ -307,7 +307,7 @@ function drawChart(scale, svg){
 		button.fill('grey');
 	});
 	button.mouseout(function() {
-		button.fill('blue');
+		button.fill('lightblue');
 	});
 	drawText(buttonx+ scale*.01,buttony-scale*.01, resetButtonString, scale/25, draw);
 	
