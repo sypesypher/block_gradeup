@@ -18,11 +18,13 @@ class block_gradeup extends block_base {
 		}
 	 
 		$this->content       =  new stdClass;
+		//pull in grades: currently just grab file
+		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/grades2.js"></script>';
+		
 		$this->content->text .= '<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>';
 		$this->content->text .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>';
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/heatmap2.js"></script>';
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/burnup.js"></script>';
-		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/grades2.js"></script>';
         $this->content->text .= '<div id="svgContainer"></div>';
 		$this->content->text .= '<div style="width:800px"> <canvas id="heatmapChart"> </canvas> </div>';
 
