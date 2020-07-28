@@ -1,5 +1,26 @@
 <?php
-//TODO: add moodle comment garbage discalaimers
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Gradeup Block.
+ *
+ * @package   block_gradeup
+ * @author    Chris Strothman	<cstrothman@southern.edu>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 class block_gradeup extends block_base {
 
@@ -18,11 +39,16 @@ class block_gradeup extends block_base {
 		}
 	 
 		$this->content       =  new stdClass;
+
+		//$this->context 
+
+
+
 		//pull in grades: currently just grab file
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/grades2.js"></script>';
-		
-		$this->content->text .= '<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>';
-		$this->content->text .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>';
+
+		$this->content->text .= '<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>'; //SVG.js
+		$this->content->text .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>'; //Charts.js
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/heatmap2.js"></script>';
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/burnup.js"></script>';
         $this->content->text .= '<div id="svgContainer"></div>';
