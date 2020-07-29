@@ -40,3 +40,4 @@ $string['legendPredict'] = 'Your Predicted Grade';
 $string['legendLabel'] = 'Legend';
 $string['resetButton'] = 'Reset Data';
 $string['heatmapLabel'] = 'Heatmap Chart';
+$string['userid'] = 'User ID';

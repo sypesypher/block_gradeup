@@ -28,12 +28,15 @@ class block_gradeup extends block_base {
     private $jsloaded = false;
 
 	public function init() {
-		GLOBAL $PAGE;
+		global $CFG, $OUTPUT, $USER, $DB, $PAGE, $USER;
 
         $this->title = get_string('gradeup', 'block_gradeup');
     }
 	
 	public function get_content() {
+
+		global $CFG, $OUTPUT, $USER, $DB, $PAGE, $USER;
+
 		if ($this->content !== null) {
 		  return $this->content;
 		}
@@ -70,7 +73,6 @@ class block_gradeup extends block_base {
         $this->content->text .= 'let resetButtonString = \'' . get_string('resetButton', 'block_gradeup') . '\';';
         $this->content->text .= 'let heatMapString = \'' . get_string('heatmapLabel', 'block_gradeup') . '\';';
 
-		
         $this->content->text .= 'function getData() {'; //Normally a call to get data, but this will do for an example
 		$this->content->text .=     'let data = grades;';
         $this->content->text .=     'return data;';
@@ -82,6 +84,8 @@ class block_gradeup extends block_base {
 		$this->content->text .= 'drawAssignments(scale, draw,data);';
 		$this->content->text .= 'showHeatMap("heatmapChart",data);';
 		$this->content->text .= '</script>';
+
+		$this->content->footer = get_string('userid', 'block_chessblock') . ': ' . $USER->id;
 
 		return $this->content;
 	}
