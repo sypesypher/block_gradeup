@@ -85,6 +85,17 @@ class block_gradeup extends block_base {
 		$this->content->text .= 'showHeatMap("heatmapChart",data);';
 		$this->content->text .= '</script>';
 
+		$courses = enrol_get_users_courses($USER->id, true);
+		print_r($courses);
+
+		
+		//$courses = get_my_courses($USER->id, 'visible DESC,sortorder ASC', '*', false, 21);
+		$this->content->text .= 'Courses: ';
+		foreach ($courses as $course) {
+			$this->content->text .= $course->fullname . ', ' ;
+		}
+		
+
 		$this->content->footer = get_string('userid', 'block_chessblock') . ': ' . $USER->id;
 
 		return $this->content;
