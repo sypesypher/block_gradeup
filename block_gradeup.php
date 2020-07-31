@@ -43,10 +43,6 @@ class block_gradeup extends block_base {
 	 
 		$this->content       =  new stdClass;
 
-		//$this->context 
-
-
-
 		//pull in grades: currently just grab file
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/grades2.js"></script>';
 
@@ -85,18 +81,27 @@ class block_gradeup extends block_base {
 		$this->content->text .= 'showHeatMap("heatmapChart",data);';
 		$this->content->text .= '</script>';
 
-		$courses = enrol_get_users_courses($USER->id, true);
-		print_r($courses);
-
 		
-		//$courses = get_my_courses($USER->id, 'visible DESC,sortorder ASC', '*', false, 21);
-		$this->content->text .= 'Courses: ';
+		$userID  = $USER->id;
+		$this->content->text .= get_string('userid', 'block_chessblock') . ': ' . $userID . ' ';
+		
+		$courses = enrol_get_users_courses($userID, true);
+		$this->content->text .= '<br>Your Courses: ';
 		foreach ($courses as $course) {
-			$this->content->text .= $course->fullname . ', ' ;
-		}
-		
+			$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
+			$getCoursesSql = "SELECT c.id, c.fullname FROM mdl_course c INNER JOIN mdl_enrol e ON c.id=e.courseid INNER JOIN mdl_user_enrolments ue ON e.id=ue.enrolid WHERE userid=5 ORDER BY c.fullname;";
+			$getAssignmentsSql = "SELECT a.id, a.course, a.name, a.grade, a.duedate FROM mdl_assign a WHERE course=" . $course->id . " ORDER BY a.duedate;";
+			$grades = array();
+			$grade_records = $DB->get_records_sql($getAssignmentsSql);
+			print_r($grade_records);
 
-		$this->content->footer = get_string('userid', 'block_chessblock') . ': ' . $USER->id;
+			$getUserGrades = "SELECT g.* FROM mdl_grade_grades g JOIN mdl_grade_items gi ON gi.id = g.itemid WHERE g.userid=" . $userID . " AND gi.courseid = ". $course->id . ";"; 
+			$student_grades = $DB->get_records_sql($getUserGrades);
+			print_r($student_grades);
+
+			//$getUserCourseGrades = "SELECT a.id, ag.assignment, a.course,a.name,ag.userid,a.grade,ag.grade,a.duedate FROM mdl_assign a JOIN mdl_assign_grades ag ON a.id=ag.assignment WHERE ag.userid=" . $userID . ";"
+				
+		}
 
 		return $this->content;
 	}

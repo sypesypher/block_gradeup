@@ -5,7 +5,6 @@ grades= [
 		score: .7,
 		originalScore: .7,
 		averageScore: .8,
-		difficulty: 1,
 		due: "2020-08-10",
 		dueDateWeek: 1
 	},
@@ -15,7 +14,6 @@ grades= [
 		score: 0.7,
 		originalScore: 0.7,
 		averageScore: .8,
-		difficulty: 1,
 		due: "2020-08-12",
 		dueDateWeek: 1
 	},
@@ -25,7 +23,6 @@ grades= [
 		score: 0.7,
 		originalScore: 0.7,
 		averageScore: .8,
-		difficulty: 1,
 		due: "2020-08-14",
 		dueDateWeek: 1
 	},
@@ -35,7 +32,6 @@ grades= [
 		score: 0.7,
 		originalScore: 0.7,
 		averageScore: .8,
-		difficulty: 4,
 		due: "2020-08-17",
 		dueDateWeek: 2
 	},
@@ -45,7 +41,6 @@ grades= [
 		score: 0.7,
 		originalScore: 0.7,
 		averageScore: .8,
-		difficulty: 1,
 		due: "2020-08-20",
 		dueDateWeek: 2
 	},
@@ -55,7 +50,6 @@ grades= [
 		score: 0.7,
 		originalScore: 0.7,
 		averageScore: .8,
-		difficulty: 1,
 		due: "2020-08-27",
 		dueDateWeek: 3
 	},
@@ -65,7 +59,6 @@ grades= [
 		score: 0.7,
 		originalScore: 0.7,
 		averageScore: .8,
-		difficulty: 1,
 		due: "2020-09-01",
 		dueDateWeek: 4
 	},
@@ -75,7 +68,6 @@ grades= [
 		score: 0.7,
 		originalScore: 0.7,
 		averageScore: .8,
-		difficulty: 4,
 		due: "2020-09-10",
 		dueDateWeek: 5
 	},
@@ -85,7 +77,6 @@ grades= [
 		score: null,
 		originalScore: null,
 		averageScore: null,
-		difficulty: 4,
 		due: "2020-09-15",
 		dueDateWeek: 6
 	},
@@ -95,7 +86,6 @@ grades= [
 		score: null,
 		originalScore: null,
 		averageScore: null,
-		difficulty: 4,
 		due: "2020-09-22",
 		dueDateWeek: 7
 	}
