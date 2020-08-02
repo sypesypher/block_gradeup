@@ -89,13 +89,24 @@ class block_gradeup extends block_base {
 		$this->content->text .= '<br>Your Courses: ';
 		foreach ($courses as $course) {
 			$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
-			$getCoursesSql = "SELECT c.id, c.fullname FROM mdl_course c INNER JOIN mdl_enrol e ON c.id=e.courseid INNER JOIN mdl_user_enrolments ue ON e.id=ue.enrolid WHERE userid=5 ORDER BY c.fullname;";
-			$getAssignmentsSql = "SELECT a.id, a.course, a.name, a.grade, a.duedate FROM mdl_assign a WHERE course=" . $course->id . " ORDER BY a.duedate;";
-			$grades = array();
-			$grade_records = $DB->get_records_sql($getAssignmentsSql);
-			print_r($grade_records);
 
-			$getUserGrades = "SELECT g.* FROM mdl_grade_grades g JOIN mdl_grade_items gi ON gi.id = g.itemid WHERE g.userid=" . $userID . " AND gi.courseid = ". $course->id . ";"; 
+			$grades = array();
+			$getUserGrades = "SELECT q1.itemname, q1.finalgrade, q1.grademax, q1.duedate,q2.averageGrade FROM (
+								SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
+									FROM mdl_grade_grades g 
+									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
+									INNER JOIN mdl_assign a ON a.name=gi.itemname 
+									WHERE g.userid = 5 AND gi.courseid = 2 AND gi.itemname IS NOT NULL 
+									ORDER BY a.duedate
+								) q1 INNER JOIN (
+									SELECT gi.itemname, AVG(finalgrade) as averageGrade
+									FROM mdl_grade_grades g 
+									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
+									INNER JOIN mdl_assign a ON a.name=gi.itemname 
+									WHERE gi.courseid = 2 AND gi.itemname IS NOT NULL 
+									GROUP BY itemname
+									ORDER BY gi.itemname
+								) q2 ON q1.itemname=q2.itemname;"; 
 			$student_grades = $DB->get_records_sql($getUserGrades);
 			print_r($student_grades);
 
