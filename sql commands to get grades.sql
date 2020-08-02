@@ -16,7 +16,8 @@ SELECT * FROM mdl_grade_grades_history;
 SELECT c.id, c.fullname FROM mdl_course c INNER JOIN mdl_enrol e ON c.id=e.courseid INNER JOIN mdl_user_enrolments ue ON e.id=ue.enrolid WHERE userid=5 ORDER BY c.fullname;
 
 /* returns the total points available in a course for use in computing assignment weight */
-SELECT SUM(grade) FROM mdl_assign a WHERE a.course=2; 
+SELECT SUM(grade) as totalPoints FROM mdl_assign a WHERE a.course=2; 
+
 
 /*get grades for a user given a specific class and user id*/
 SELECT gi.courseid,g.userid,gi.itemname, g.finalgrade, gi.grademax, a.duedate 
@@ -25,6 +26,10 @@ SELECT gi.courseid,g.userid,gi.itemname, g.finalgrade, gi.grademax, a.duedate
     INNER JOIN mdl_assign a ON a.name=gi.itemname 
     WHERE g.userid = 5 AND gi.courseid = 2 AND gi.itemname IS NOT NULL 
     ORDER BY a.duedate;
+
+/*
+, q1.grademax / SUM(q1.grademax) AS weight 
+*/
 
 /*get grades for a user given a specific class and user id, also gets average grade for an assignment*/
 SELECT q1.itemname, q1.finalgrade, q1.grademax, q1.duedate,q2.averageGrade FROM (

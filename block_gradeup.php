@@ -91,19 +91,26 @@ class block_gradeup extends block_base {
 			$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
 
 			$grades = array();
+
+			$getTotalCoursePoints = "SELECT SUM(grade) as totalPoints FROM mdl_assign a WHERE a.course=2; ";
+			$totalPoints = $DB->get_records_sql($getTotalCoursePoints);
+			print_r($totalPoints);
+
+			//". $userId ."
+			// ". $course->id ." 
 			$getUserGrades = "SELECT q1.itemname, q1.finalgrade, q1.grademax, q1.duedate,q2.averageGrade FROM (
 								SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
 									FROM mdl_grade_grades g 
 									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
 									INNER JOIN mdl_assign a ON a.name=gi.itemname 
-									WHERE g.userid = 5 AND gi.courseid = 2 AND gi.itemname IS NOT NULL 
+									WHERE g.userid = 5 AND gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
 									ORDER BY a.duedate
 								) q1 INNER JOIN (
 									SELECT gi.itemname, AVG(finalgrade) as averageGrade
 									FROM mdl_grade_grades g 
 									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
 									INNER JOIN mdl_assign a ON a.name=gi.itemname 
-									WHERE gi.courseid = 2 AND gi.itemname IS NOT NULL 
+									WHERE gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
 									GROUP BY itemname
 									ORDER BY gi.itemname
 								) q2 ON q1.itemname=q2.itemname;"; 
