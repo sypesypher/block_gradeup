@@ -126,6 +126,22 @@ class block_gradeup extends block_base {
 			}
 			
 			print_r($student_grades);
+			
+			//convert php grades objects array to a string so it can be passed to the javascript, is there a better way? probably
+			String $jsonGradesString = "grades = [";
+			foreach ($student_grades as $grade){
+				$jsonGradesString .= "{";
+				$jsonGradesString .= "itemname: \"" . $grade->itemname . "\",";
+				$jsonGradesString .= "weight: " . $grade->weight . ",";
+				$jsonGradesString .= "score: " . $grade->score . ",";
+				$jsonGradesString .= "originalScore: " . $grade->score . ",";
+				$jsonGradesString .= "averageScore: " . $grade->averageScore . ",";
+				$jsonGradesString .= "due: " . $grade->duedate;
+				$jsonGradesString .= "}";
+				$jsonGradesString .= ",";
+			}
+			$jsonGradesString = rtrim($jsonGradesString, ","); //remove the comma after the last grade
+			$jsonGradesString .= "];"
 
 			//$getUserCourseGrades = "SELECT a.id, ag.assignment, a.course,a.name,ag.userid,a.grade,ag.grade,a.duedate FROM mdl_assign a JOIN mdl_assign_grades ag ON a.id=ag.assignment WHERE ag.userid=" . $userID . ";"
 				
