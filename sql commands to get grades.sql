@@ -32,7 +32,7 @@ SELECT gi.courseid,g.userid,gi.itemname, g.finalgrade, gi.grademax, a.duedate
 */
 
 /*get grades for a user given a specific class and user id, also gets average grade for an assignment*/
-SELECT q1.itemname, q1.finalgrade, q1.grademax, q1.duedate,q2.averageGrade FROM (
+SELECT q1.itemname as name, q1.finalgrade as score, q1.grademax, q1.duedate,q2.averageGrade FROM (
 	SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
 		FROM mdl_grade_grades g 
 		INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 

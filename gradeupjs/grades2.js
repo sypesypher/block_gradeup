@@ -1,6 +1,6 @@
 grades= [
 	{ 
-		name: "Hw1",
+		itemname: "Hw1",
 		weight: 5,
 		score: .7,
 		originalScore: .7,
@@ -9,7 +9,7 @@ grades= [
 		dueDateWeek: 1
 	},
 	{
-		name: "Hw2",
+		itemname: "Hw2",
 		weight: 5,
 		score: 0.7,
 		originalScore: 0.7,
@@ -18,7 +18,7 @@ grades= [
 		dueDateWeek: 1
 	},
 	{
-		name: "Hw3",
+		itemname: "Hw3",
 		weight: 5,
 		score: 0.7,
 		originalScore: 0.7,
@@ -27,7 +27,7 @@ grades= [
 		dueDateWeek: 1
 	},
 	{
-		name: "Exam1",
+		itemname: "Exam1",
 		weight: 20,
 		score: 0.7,
 		originalScore: 0.7,
@@ -36,7 +36,7 @@ grades= [
 		dueDateWeek: 2
 	},
 	{
-		name: "HW4",
+		itemname: "HW4",
 		weight: 5,
 		score: 0.7,
 		originalScore: 0.7,
@@ -45,7 +45,7 @@ grades= [
 		dueDateWeek: 2
 	},
 	{
-		name: "HW5",
+		itemname: "HW5",
 		weight: 5,
 		score: 0.7,
 		originalScore: 0.7,
@@ -54,7 +54,7 @@ grades= [
 		dueDateWeek: 3
 	},
 	{
-		name: "HW6",
+		itemname: "HW6",
 		weight: 5,
 		score: 0.7,
 		originalScore: 0.7,
@@ -63,7 +63,7 @@ grades= [
 		dueDateWeek: 4
 	},
 	{ 
-		name: "Exam 2",
+		itemname: "Exam 2",
 		weight: 20,
 		score: 0.7,
 		originalScore: 0.7,
@@ -72,7 +72,7 @@ grades= [
 		dueDateWeek: 5
 	},
 	{ 
-		name: "Missing 1",
+		itemname: "Missing 1",
 		weight: 15,
 		score: null,
 		originalScore: null,
@@ -81,7 +81,7 @@ grades= [
 		dueDateWeek: 6
 	},
 	{ 
-		name: "Missing 2",
+		itemname: "Missing 2",
 		weight: 15,
 		score: null,
 		originalScore: null,

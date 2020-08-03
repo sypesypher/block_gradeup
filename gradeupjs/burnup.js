@@ -74,7 +74,7 @@
 			});
 
             draw.line(x1 + (x2-x1)/2 ,scale,x1 + (x2-x1)/2,scale+10).stroke({color: 'blue', width: 1, linecap: 'round'})
-            var title = draw.text(artifact.name);
+            var title = draw.text(artifact.itemname);
 			title.x(x1 + (x2-x1)/4);
             title.y(scale+20);
             title.rotate(40);
