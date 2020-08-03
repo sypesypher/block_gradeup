@@ -89,62 +89,63 @@ class block_gradeup extends block_base {
 		$courses = enrol_get_users_courses($USER->id, true);
 		$this->content->text .= '<br>Your Courses: ';
 		foreach ($courses as $course) {
-			$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
+			if ($course->id == 2) { //TODO: the "2" is just a placeholder until the user can select which course they want to display
+				$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
 
-			$grades = array();
+				$grades = array();
 
-			$getTotalCoursePoints = "SELECT SUM(grade) as totalPoints FROM mdl_assign a WHERE a.course=". $course->id ."; ";
-			$totalCoursePoints = $DB->get_records_sql($getTotalCoursePoints);
-			$totalPoints = key($totalCoursePoints);
-			print_r($totalPoints);
-			//print_r(reset($totalCoursePoints)->totalpoints);
-			
-			//". $userId ."
-			// ". $course->id ." 
-			$getUserGrades = "SELECT q1.itemname, q1.finalgrade, q1.grademax, q1.duedate as due,q2.averagegrade FROM (
-								SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
-									FROM mdl_grade_grades g 
-									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
-									INNER JOIN mdl_assign a ON a.name=gi.itemname 
-									WHERE g.userid = ". $USER->id ." AND gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
-									ORDER BY a.duedate
-								) q1 INNER JOIN (
-									SELECT gi.itemname, AVG(finalgrade) as averageGrade
-									FROM mdl_grade_grades g 
-									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
-									INNER JOIN mdl_assign a ON a.name=gi.itemname 
-									WHERE gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
-									GROUP BY itemname
-									ORDER BY gi.itemname
-								) q2 ON q1.itemname=q2.itemname;"; 
-			$student_grades = $DB->get_records_sql($getUserGrades);
-			foreach ($student_grades as $grade) {
-				$grade->weight = $grade->grademax / $totalPoints * 100; //calculate the weight of an assignment as a value out of 100
-				$grade->score =  ($grade->finalgrade) / ($grade->grademax);
-				$grade->originalScore = $grade->score;
-				$grade->averageScore = ($grade->averagegrade) / ($grade->grademax);
-			}
-			
-			print_r($student_grades);
-			
-			//convert php grades objects array to a string so it can be passed to the javascript, is there a better way? probably
-			String $jsonGradesString = "grades = [";
-			foreach ($student_grades as $grade){
-				$jsonGradesString .= "{";
-				$jsonGradesString .= "itemname: \"" . $grade->itemname . "\",";
-				$jsonGradesString .= "weight: " . $grade->weight . ",";
-				$jsonGradesString .= "score: " . $grade->score . ",";
-				$jsonGradesString .= "originalScore: " . $grade->score . ",";
-				$jsonGradesString .= "averageScore: " . $grade->averageScore . ",";
-				$jsonGradesString .= "due: " . $grade->duedate;
-				$jsonGradesString .= "}";
-				$jsonGradesString .= ",";
-			}
-			$jsonGradesString = rtrim($jsonGradesString, ","); //remove the comma after the last grade
-			$jsonGradesString .= "];"
-
-			//$getUserCourseGrades = "SELECT a.id, ag.assignment, a.course,a.name,ag.userid,a.grade,ag.grade,a.duedate FROM mdl_assign a JOIN mdl_assign_grades ag ON a.id=ag.assignment WHERE ag.userid=" . $userID . ";"
+				$getTotalCoursePoints = "SELECT SUM(grade) as totalPoints FROM mdl_assign a WHERE a.course=". $course->id ."; ";
+				$totalCoursePoints = $DB->get_records_sql($getTotalCoursePoints);
+				$totalPoints = key($totalCoursePoints);
+				print_r($totalPoints);
+				//print_r(reset($totalCoursePoints)->totalpoints);
 				
+				//". $userId ."
+				// ". $course->id ." 
+				$getUserGrades = "SELECT q1.itemname, q1.finalgrade, q1.grademax, q1.duedate as due,q2.averagegrade FROM (
+									SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
+										FROM mdl_grade_grades g 
+										INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
+										INNER JOIN mdl_assign a ON a.name=gi.itemname 
+										WHERE g.userid = ". $USER->id ." AND gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
+										ORDER BY a.duedate
+									) q1 INNER JOIN (
+										SELECT gi.itemname, AVG(finalgrade) as averageGrade
+										FROM mdl_grade_grades g 
+										INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
+										INNER JOIN mdl_assign a ON a.name=gi.itemname 
+										WHERE gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
+										GROUP BY itemname
+										ORDER BY gi.itemname
+									) q2 ON q1.itemname=q2.itemname;"; 
+				$student_grades = $DB->get_records_sql($getUserGrades);
+				foreach ($student_grades as $grade) {
+					$grade->weight = $grade->grademax / $totalPoints * 100; //calculate the weight of an assignment as a value out of 100
+					$grade->score =  ($grade->finalgrade) / ($grade->grademax);
+					$grade->originalScore = $grade->score;
+					$grade->averageScore = ($grade->averagegrade) / ($grade->grademax);
+				}
+				
+				print_r($student_grades);
+				
+				//convert php grades objects array to a string so it can be passed to the javascript, is there a better way? probably
+				String $jsonGradesString = "grades = [";
+				foreach ($student_grades as $grade){
+					$jsonGradesString .= "{";
+					$jsonGradesString .= "itemname: \"" . $grade->itemname . "\",";
+					$jsonGradesString .= "weight: " . $grade->weight . ",";
+					$jsonGradesString .= "score: " . $grade->score . ",";
+					$jsonGradesString .= "originalScore: " . $grade->score . ",";
+					$jsonGradesString .= "averageScore: " . $grade->averageScore . ",";
+					$jsonGradesString .= "due: " . $grade->duedate;
+					$jsonGradesString .= "}";
+					$jsonGradesString .= ",";
+				}
+				$jsonGradesString = rtrim($jsonGradesString, ","); //remove the comma after the last grade
+				$jsonGradesString .= "];"
+
+				//$getUserCourseGrades = "SELECT a.id, ag.assignment, a.course,a.name,ag.userid,a.grade,ag.grade,a.duedate FROM mdl_assign a JOIN mdl_assign_grades ag ON a.id=ag.assignment WHERE ag.userid=" . $userID . ";"
+			}
 		}
 
 		return $this->content;
