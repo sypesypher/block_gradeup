@@ -55,16 +55,12 @@ class block_gradeup extends block_base {
 			if ($course->id == 2) { //TODO: the "2" is just a placeholder until the user can select which course they want to display
 				$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
 
-				$grades = array();
-
+				//Get the total points in a course to calculate weights of assignments
 				$getTotalCoursePoints = "SELECT SUM(grade) as totalPoints FROM mdl_assign a WHERE a.course=". $course->id ."; ";
 				$totalCoursePoints = $DB->get_records_sql($getTotalCoursePoints);
 				$totalPoints = key($totalCoursePoints);
-				print_r($totalPoints);
-				//print_r(reset($totalCoursePoints)->totalpoints);
 				
-				//". $userId ."
-				// ". $course->id ." 
+				//Get user grades from the moodle database
 				$getUserGrades = "SELECT q1.itemname, q1.finalgrade, q1.grademax, q1.duedate as due,q2.averagegrade FROM (
 									SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
 										FROM mdl_grade_grades g 
@@ -82,7 +78,7 @@ class block_gradeup extends block_base {
 										ORDER BY gi.itemname
 									) q2 ON q1.itemname=q2.itemname ORDER BY q1.duedate"; 
 				$student_grades = $DB->get_records_sql($getUserGrades);
-				print_r($student_grades);
+				//take the database results and format into a PHP grades Object array 
 				foreach ($student_grades as $grade) {
 					$grade->weight = $grade->grademax / $totalPoints * 100; //calculate the weight of an assignment as a value out of 100
 					if ($grade->finalgrade == null){
@@ -100,10 +96,7 @@ class block_gradeup extends block_base {
 					
 				}
 				
-				print_r($student_grades);
-				
-				//convert php grades objects array to a string so it can be passed to the javascript, is there a better way? probably
-				
+				//convert php grades objects array to a string (in JSON format) so it can be passed to the javascript, is there a better way? probably
 				$jsonGradesString = "let grades = [";
 				foreach ($student_grades as $grade){
 					$jsonGradesString .= "{";
@@ -131,16 +124,16 @@ class block_gradeup extends block_base {
 				}
 				$jsonGradesString = rtrim($jsonGradesString, ","); //remove the comma after the last grade
 				$jsonGradesString .= "];";
-				//print_r($jsonGradesString);
+				
+				//pass the json 
 				$this->content->text .= '<script>';
 				$this->content->text .= $jsonGradesString;
 				$this->content->text .= '</script>';
-				//$getUserCourseGrades = "SELECT a.id, ag.assignment, a.course,a.name,ag.userid,a.grade,ag.grade,a.duedate FROM mdl_assign a JOIN mdl_assign_grades ag ON a.id=ag.assignment WHERE ag.userid=" . $userID . ";"
 			}
 		}
 
 		$this->content->text .= '<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>'; //SVG.js
-		$this->content->text .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>'; //Charts.js
+		$this->content->text .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>'; //Charts.js - to be replaced by new heatmap with SVG.js
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/heatmap2.js"></script>';
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/burnup.js"></script>';
         $this->content->text .= '<div id="svgContainer"></div>';
@@ -173,11 +166,6 @@ class block_gradeup extends block_base {
 		$this->content->text .= 'drawAssignments(scale, draw,data);';
 		$this->content->text .= 'showHeatMap("heatmapChart",data);';
 		$this->content->text .= '</script>';
-
-
-		$this->content->text .= get_string('userid', 'block_chessblock') . ': ' . $USER->id . ' ';
-		
-		
 
 		return $this->content;
 	}
