@@ -47,4 +47,4 @@ SELECT q1.itemname as name, q1.finalgrade as score, q1.grademax, q1.duedate,q2.a
 		WHERE gi.courseid = 2 AND gi.itemname IS NOT NULL 
 		GROUP BY itemname
 		ORDER BY gi.itemname
-	) q2 ON q1.itemname=q2.itemname;
+	) q2 ON q1.itemname=q2.itemname ORDER BY q1.duedate
