@@ -46,7 +46,7 @@ class block_gradeup extends block_base {
 		$this->content       =  new stdClass;
 
 		//pull in grades: currently just grab file
-		//$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/grades2.js"></script>';
+		//$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/grades.js"></script>';
 
 		//pull grades
 		$courses = enrol_get_users_courses($USER->id, true);
