@@ -15,6 +15,25 @@
 		<div style="width:800px"> <canvas id="heatmapChart"> </canvas> </div>
     </body>
     <script>
+		/*TODO: 
+			finish heatmap SVJ.js	
+				set end point as the last assignment
+				set first due date about 5-10% inwards on the course
+				get x scale from difference between first and last due assignments
+				get y scale from highest percentage on a date
+				compare all due dates to first/last assignment against the scale to find their data point x and y
+				draw all points
+				write all dates under their point 
+				draw polygon through all the points 
+				add color gradient to the polygon to represent weight intensity
+				add display on hover over a point to see list of assignments paired with their weight 				
+			add drop down to select which course to display https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_select
+			update block_gradeup.php to save all course grades so the above works^
+			add text entry to set scale in javascript to help resize the page
+			add redraw option to burnup and heatmap chart so if the scale is changed OR the class selected is changed....it removes the old and redraws
+			pull out the string maker for the javascript and 
+		*/		
+	
         //Normally a call to get data, but this will do for an example
         function getData() {
             let data = grades;
