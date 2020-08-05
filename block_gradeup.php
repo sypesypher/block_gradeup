@@ -28,7 +28,7 @@ class block_gradeup extends block_base {
     private $jsloaded = false;
 
 	public function init() {
-		global $CFG, $OUTPUT, $USER, $DB, $PAGE, $USER;
+		global $CFG, $USER, $DB, $USER;
 
         $this->title = get_string('gradeup', 'block_gradeup');
     }
@@ -37,7 +37,7 @@ class block_gradeup extends block_base {
 
 	public function get_content() {
 
-		global $CFG, $OUTPUT, $USER, $DB, $PAGE, $USER;
+		global $CFG, $USER, $DB, $USER;
 
 		if ($this->content !== null) {
 		  return $this->content;
@@ -51,6 +51,13 @@ class block_gradeup extends block_base {
 		//pull grades
 		$courses = enrol_get_users_courses($USER->id, true);
 		$this->content->text .= '<br>Your Courses: ';
+
+		//user selects which course to pull data from
+		$dropdownCourses = [];
+		foreach ($courses as $course) {
+			$dropdownCourses;
+		}
+		
 		foreach ($courses as $course) {
 			if ($course->id == 2) { //TODO: the "2" is just a placeholder until the user can select which course they want to display
 				$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
