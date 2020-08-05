@@ -1,0 +1,23 @@
+{
+  "name": "gradeup2",
+  "version": "1.0.0",
+  "description": "Javascript plugin for moodle display yada yada",
+  "main": "burnup.js",
+  "scripts": {
+    "test": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sypesypher/gradeup2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sypesypher/gradeup2/issues"
+  },
+  "homepage": "https://github.com/sypesypher/gradeup2#readme",
+  "devDependencies": {
+    "jest": "^26.0.1"
+  }
+}
