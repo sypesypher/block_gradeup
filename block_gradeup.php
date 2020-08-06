@@ -132,6 +132,14 @@ class block_gradeup extends block_base {
 				$jsonGradesString = rtrim($jsonGradesString, ","); //remove the comma after the last grade
 				$jsonGradesString .= "];";
 				
+				//TODO: instead of passing the string below,
+				//modify so that instead of "grades = {....." it's "courseID = {...."
+				// 		assign an object[key= courseid] = jsonGradeString
+				//then at end of loop, OBJECT will contain the json string for each class
+				//stringify the object by setting "object = [ "courseID" : {" + Object[courseID] + "}, ..." for each course like above
+				//pass the entire nested object of objects to javascript
+				//then to pull in the grades you need, you will use data=Object[courseID] as the data
+				
 				//pass the json 
 				$this->content->text .= '<script>';
 				$this->content->text .= $jsonGradesString;
