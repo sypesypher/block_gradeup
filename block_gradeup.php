@@ -150,8 +150,19 @@ class block_gradeup extends block_base {
 		$this->content->text .= '<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>'; //SVG.js
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/heatmap.js"></script>';
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/burnup.js"></script>';
+		$this->content->text .= '<label for="cars">Which Course do you want to see?</label>';
+		$this->content->text .= 	'<select name="cars" id="courseSelection" onchange="valueChanged()">';
+		$this->content->text .= 	'<option value="2">Math</option>';
+		$this->content->text .= 	'<option value="4">English</option> <! the value is the course id?>';
+		$this->content->text .= '</select>';
+		$this->content->text .= 'Change the Scale: <input type="number" id="scaleSelection" name="scaleInput" value="500" min="100" max="1000" onchange="valueChanged()"><br><br>';
+		
 		$this->content->text .= '<div id="svgContainer"></div>';
 		$this->content->text .= '<div id="svgContainer2"></div>';
+		
+		
+		
+		
 
 		//Define all the needed String values reading from lang directory
 		$this->content->text .= '<script>';
@@ -169,13 +180,28 @@ class block_gradeup extends block_base {
         $this->content->text .= 'let resetButtonString = \'' . get_string('resetButton', 'block_gradeup') . '\';';
         $this->content->text .= 'let heatMapString = \'' . get_string('heatmapLabel', 'block_gradeup') . '\';';
 
+		$this->content->text .= 'function valueChanged() {';
+		$this->content->text .= 	'var e = document.getElementById("courseSelection");';
+		$this->content->text .= 	'var s = document.getElementById("scaleSelection");';
+		$this->content->text .= 	'console.log("new course: " + e.options[e.selectedIndex].value);';
+		$this->content->text .= 	'console.log("new scale: " + s.value);';	
+		$this->content->text .= 	'let scale = parseInt(s.value);';
+		$this->content->text .= 	'draw.size(scale+scale*2/3,scale+scale/6);';
+		$this->content->text .= 	'draw.clear();';
+		$this->content->text .= 	'drawChart(scale,draw);';
+		$this->content->text .= 	'drawAssignments(scale, draw,data);';
+		$this->content->text .= 	'draw2.size(scale+scale*.66,scale/2);';
+		$this->content->text .= 	'draw2.clear();';
+		$this->content->text .= 	'drawHeatMap(scale,draw2,data);';
+		$this->content->text .= '}';
+
         $this->content->text .= 'function getData() {'; //Normally a call to get data, but this will do for an example
 		$this->content->text .=     'let data = grades;';
         $this->content->text .=     'return data;';
         $this->content->text .= '};';
 		$this->content->text .= 'let data = getData();';
 		$this->content->text .= 'let scale = 600;';
-		$this->content->text .= 'var draw = SVG().addTo(\'#svgContainer\').size(scale+500,scale+100);'; //additional area for chart legend and assignment names
+		$this->content->text .= 'var draw = SVG().addTo(\'#svgContainer\').size(scale + scale*2/3,scale+scale/6);'; //additional area for chart legend and assignment names
 		$this->content->text .= 'drawChart(scale,draw);';
 		$this->content->text .= 'drawAssignments(scale, draw,data);';
 		$this->content->text .= 'var draw2 = SVG().addTo(\'#svgContainer2\').size(scale+scale*.66,scale/2);';
