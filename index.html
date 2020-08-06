@@ -9,17 +9,36 @@
     </head>
     <body style="background-color: rgb(119, 190, 187);">
         <h2 style="font-size:30px; color:green; text-align:center">Gradeup 2</h2>
-        <div id="svgContainer"></div>
+        
+		
+		<label for="cars">Which Course do you want to see?</label>
+			<select name="cars" id="courseSelection">
+			<option value="2">Math</option>
+			<option value="4">English</option> <! the value is the course id?>
+		</select>
+		
+		Change the Scale: <input type="number" id="scaleSelection" name="scaleInput" value="600" min="100" max="1000">
+		<br><br>
+		 
+		<div id="svgContainer"></div>
 		<div id="svgContainer2"></div>
+		
     </body>
     <script>
 		/*TODO:			
-			add drop down to select which course to display https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_select
 			update block_gradeup.php to save all course grades so the above works^
 			add text entry to set scale in javascript to help resize the page
 			add redraw option to burnup and heatmap chart so if the scale is changed OR the class selected is changed....it removes the old and redraws
 			pull out the string maker for the javascript and 
-		*/		
+		*/
+
+		var e = document.getElementById("courseSelection");
+		var courseSelected = e.options[e.selectedIndex].value;
+		console.log("User selected Course: " + courseSelected);
+		
+		var s = document.getElementById("scaleSelection");
+		var userScale = s.value;
+		console.log("User set Scale to: " + userScale);
 	
         //Normally a call to get data, but this will do for an example
         function getData() {
