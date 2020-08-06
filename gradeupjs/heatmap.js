@@ -98,6 +98,9 @@ function drawHeatMap(scale,svg,data) {
 	yScalePerWeight = (scale/3) / heaviestWeight;
 	console.log("yScalePerWeight: " + yScalePerWeight);
 	console.log(heaviestWeight);
+	drawTextHeatmap(scale*1.52, 0, heaviestWeight + "%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/6 -scale*.015), (heaviestWeight/2) + "%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3 -scale*.03), "0%",scale/30, draw);
 
 
 	//get plot Points for each heatmap Point
