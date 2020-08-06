@@ -12,12 +12,12 @@
         
 		
 		<label for="cars">Which Course do you want to see?</label>
-			<select name="cars" id="courseSelection">
+			<select name="cars" id="courseSelection" onchange="valueChanged()">
 			<option value="2">Math</option>
 			<option value="4">English</option> <! the value is the course id?>
 		</select>
 		
-		Change the Scale: <input type="number" id="scaleSelection" name="scaleInput" value="600" min="100" max="1000">
+		Change the Scale: <input type="number" id="scaleSelection" name="scaleInput" value="500" min="100" max="1000" onchange="valueChanged()">
 		<br><br>
 		 
 		<div id="svgContainer"></div>
@@ -27,19 +27,29 @@
     <script>
 		/*TODO:			
 			update block_gradeup.php to save all course grades so the above works^
-			add text entry to set scale in javascript to help resize the page
-			add redraw option to burnup and heatmap chart so if the scale is changed OR the class selected is changed....it removes the old and redraws
-			pull out the string maker for the javascript and 
+			pull out the string maker for the javascript and make into array for all courses etc...
 		*/
-
-		var e = document.getElementById("courseSelection");
-		var courseSelected = e.options[e.selectedIndex].value;
-		console.log("User selected Course: " + courseSelected);
 		
-		var s = document.getElementById("scaleSelection");
-		var userScale = s.value;
-		console.log("User set Scale to: " + userScale);
-	
+		//check if the user changed scale or selected a new course to see
+		function valueChanged() {
+			var e = document.getElementById("courseSelection");
+			var s = document.getElementById("scaleSelection");
+			console.log("new course: " + e.options[e.selectedIndex].value);
+			console.log("new scale: " + s.value);
+			
+			//redraw			
+			let scale = parseInt(s.value);
+			draw.size(scale+scale*2/3,scale+scale/6); //additional area for chart legend and assignment names
+			draw.clear();
+			drawChart(scale,draw);
+			drawAssignments(scale, draw,data);
+		
+			draw2.size(scale+scale*.66,scale/2);
+			draw2.clear();
+			drawHeatMap(scale,draw2,data);	
+		}
+		
+
         //Normally a call to get data, but this will do for an example
         function getData() {
             let data = grades;
@@ -61,8 +71,8 @@
         let heatMapString = "Heatmap Chart";
 		
 		let data = getData();
-		let scale = 600;
-		var draw = SVG().addTo('#svgContainer').size(scale+400,scale+100); //additional area for chart legend and assignment names
+		let scale = 500;
+		var draw = SVG().addTo('#svgContainer').size(scale + scale*2/3,scale+scale/6); 
 		drawChart(scale,draw);
 		drawAssignments(scale, draw,data);
 		
