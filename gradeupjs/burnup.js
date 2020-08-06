@@ -111,7 +111,7 @@ function drawPrediction(x, y, data, scale, draw, percentage) { //This could prob
 			
 			var x5 = scale;
 			var y5 = y1 - ((y3-y4)*percentage);
-			console.log("drawprediction percentage passed in: " + percentage);
+			//console.log("drawprediction percentage passed in: " + percentage);
 		}
 		x1 = x2;
 		y1 = y2;
