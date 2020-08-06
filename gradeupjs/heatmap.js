@@ -54,27 +54,28 @@ function drawHeatMap(scale,svg,data) {
 	//calculate the scale for drawing
 	var differenceInDays = (lastDate.getTime() - firstDate.getTime()) / (1000 * 3600 * 24); //how many days between start and end point
 	console.log("days between first and last assignment: " + differenceInDays);
-	let pixelsPerDay = ((scale * 1.5)-scale*.05)/differenceInDays;
-	console.log("X Pixels per day: " + pixelsPerDay);
+	let xScalePerDay = ((scale * 1.5)-scale*.05)/differenceInDays;
+	console.log("X Pixels per day: " + xScalePerDay);
 	
 	//combine/filter grades that have the same due date together
 	var gradeLoads = [];
 	for (let i=0; i<data.length; i++) {
 		let duedate = new Date(data[i].due * 1000);
+		let daysTill = (duedate.getTime() - firstDate.getTime()) / (1000 * 3600 * 24);
 		let dateObject = (duedate.getMonth()+1) + '/' + duedate.getDay() + '/' + duedate.getFullYear()
 		let assignment = {};
 		assignment.duedate = dateObject;
 		assignment.gradeweight = data[i].weight;
 		assignment.name = data[i].itemname; 
+		assignment.xCoordinate = Math.floor(daysTill * xScalePerDay);
 		gradeLoads.push(assignment);
 	}
 	console.log(gradeLoads);
 
 	//calculate the weight for each date
 	let heatmapData = {}
-	for (let i=0; i<data.length;i++) {
+	for (let i=0; i<gradeLoads.length;i++) {
 		let dueDate = {};
-		
 		let assignmentDueDate = gradeLoads[i].duedate;
 
 		if (assignmentDueDate in heatmapData) {
@@ -86,29 +87,86 @@ function drawHeatMap(scale,svg,data) {
 	}
 	console.log(heatmapData);
 
-	
+	//find the highest weight of any date to set as the upper limit of the Y scale
+	let heaviestWeight = null;
+	for (key in heatmapData) {
+		//console.log(key + " : " + heatmapData[key]);
+		if (heaviestWeight == null || heaviestWeight < heatmapData[key]) {
+			heaviestWeight = heatmapData[key];
+		}
+	}
+	yScalePerWeight = (scale/3) / heaviestWeight;
+	console.log("yScalePerWeight: " + yScalePerWeight);
+	console.log(heaviestWeight);
 
-	
 
+	//get plot Points for each heatmap Point
 
-	plotPoint(100,100,data[0],scale,draw);
-	
+	let ypoints = [];
+	let xpoints = [];
+	for (key in heatmapData) {
+		let x = 0;
+		for (let i=0; i<gradeLoads.length;i++) {
+			if (gradeLoads[i].duedate == key){
+				x = gradeLoads[i].xCoordinate + scale*.04;
+				break;
+			}
+		}
+		let y = (scale/3) - (heatmapData[key] * yScalePerWeight);
+		console.log(key + " (x,y): (" + x + "," + y + ")");
+		plotPoint(x,y,draw);
+		drawTextHeatmap(x-scale*.03,scale/3 + scale*.05, key, scale/30, draw, 90);
+
+		xpoints.push(x);
+		ypoints.push(y);
+	}
+	console.log(xpoints);
+	console.log(ypoints);
+
+	let heatmapLineString = "0," + scale/3 + " ";
+	for (let i =0; i<xpoints.length;i++) {
+		heatmapLineString += xpoints[i]+2;
+		heatmapLineString += ",";
+		heatmapLineString += ypoints[i];
+		heatmapLineString += " " + (xpoints[i]+2) + "," + scale/3 + " ";
+	}
+	heatmapLineString += scale*1.5 + "," + scale/3 + " 0," + scale/3 + " 0,0";
+
+	console.log(heatmapLineString);
+	var gradient = draw.gradient('linear', function(add) {
+		add.stop(0, 'red')
+		add.stop(1, 'green')
+	  })
+	gradient.from(0,0).to(0,1);
+	var heatline = draw.polyline(heatmapLineString);
+	heatline.stroke({color: 'red', width: 2});
+	heatline.fill(gradient);
 }
 
-function plotPoint(x, y, artifact, scale, draw) {
-			var point = draw.circle(4);
-			point.x = x;
-			point.y = y;
-			
+function plotPoint(x, y, draw) {
+	var point = draw.circle(10);
+	point.x(x);
+	point.y(y);
+	point.fill('blue');
+	point.mouseover(function() {
+		//use this to add functionality later - maybe show what assignments are due on each date
+		point.fill('grey');
+	});
 
-            return {};
+	point.mouseout(function() {
+		point.fill('blue');
+	});
+	
+	return {};
 }     
         
 
-function drawText(x,y,message,fontsize,draw){
+function drawTextHeatmap(x,y,message,fontsize,draw,rotation=0){
+	console.log(rotation);
 	var text = draw.text(message);
 	text.x(x);
 	text.y(y);
+	text.rotate(rotation);
 	text.font({
 		size: fontsize
 	})
