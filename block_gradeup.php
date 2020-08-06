@@ -57,7 +57,7 @@ class block_gradeup extends block_base {
 		foreach ($courses as $course) {
 			$dropdownCourses;
 		}
-		
+
 		foreach ($courses as $course) {
 			if ($course->id == 2) { //TODO: the "2" is just a placeholder until the user can select which course they want to display
 				$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
@@ -140,11 +140,10 @@ class block_gradeup extends block_base {
 		}
 
 		$this->content->text .= '<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>'; //SVG.js
-		$this->content->text .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>'; //Charts.js - to be replaced by new heatmap with SVG.js
-		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/heatmap2.js"></script>';
+		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/heatmap.js"></script>';
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/burnup.js"></script>';
-        $this->content->text .= '<div id="svgContainer"></div>';
-		$this->content->text .= '<div style="width:800px"> <canvas id="heatmapChart"> </canvas> </div>';
+		$this->content->text .= '<div id="svgContainer"></div>';
+		$this->content->text .= '<div id="svgContainer2"></div>';
 
 		//Define all the needed String values reading from lang directory
 		$this->content->text .= '<script>';
@@ -171,7 +170,8 @@ class block_gradeup extends block_base {
 		$this->content->text .= 'var draw = SVG().addTo(\'#svgContainer\').size(scale+500,scale+100);'; //additional area for chart legend and assignment names
 		$this->content->text .= 'drawChart(scale,draw);';
 		$this->content->text .= 'drawAssignments(scale, draw,data);';
-		$this->content->text .= 'showHeatMap("heatmapChart",data);';
+		$this->content->text .= 'var draw2 = SVG().addTo(\'#svgContainer2\').size(scale+scale*.66,scale/2);';
+		$this->content->text .= 'drawHeatMap(scale,draw2,data);';
 		$this->content->text .= '</script>';
 
 		return $this->content;
