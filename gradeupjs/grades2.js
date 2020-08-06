@@ -7,7 +7,7 @@ let grades = [
 	averageScore: 0.8,
 	due: 1592352000
 	},
-	{itemname: "Hw2",weight: 5,score: 0.7,originalScore: 0.7,averageScore: 0.8,due: 1593475200
+	{itemname: "Hw2",weight: 5,score: 0.7,originalScore: 0.7,averageScore: 0.8,due: 1592352000
 	},
 	{itemname: "Exam2",weight: 20,score: 0.7,originalScore: 0.7,averageScore: 0.8,due: 1595808000
 	},

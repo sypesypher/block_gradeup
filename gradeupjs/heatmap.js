@@ -33,67 +33,75 @@ function drawHeatMap(scale,svg,data) {
 	var border = draw.polyline(`0,0 ${borderx},0 ${borderx},${bordery} 0,${bordery} 0,0`);
 	border.stroke({color: 'grey', width: 2});
 	border.fill('none');
+
+	//find the last due date (this will be the largest Unix timestamp value)
+	var lastDueUnix = data[0].due;
+	var firstDueUnix = data[0].due;
+	for (let i=1; i<data.length; i++) {
+		if (data[i].due > lastDueUnix) {
+			lastDueUnix = data[i].due;
+			//console.log("assignment:" + data[i].itemname + " due at:" + data[i].due)
+		}
+		if (data[i].due < firstDueUnix) {
+			firstDueUnix = data[i].due;
+		}
+	}
+	var lastDate = new Date(lastDueUnix * 1000); //https://www.epochconverter.com/ <- to understand what is happening
+	var firstDate = new Date(firstDueUnix * 1000);
+	console.log(lastDate.getDay() + '/' + (lastDate.getMonth()+1) + '/' + lastDate.getFullYear());
+	console.log(firstDate.getDay() + '/' + (firstDate.getMonth()+1) + '/' + firstDate.getFullYear());
+
+	//calculate the scale for drawing
+	var differenceInDays = (lastDate.getTime() - firstDate.getTime()) / (1000 * 3600 * 24); //how many days between start and end point
+	console.log("days between first and last assignment: " + differenceInDays);
+	let pixelsPerDay = ((scale * 1.5)-scale*.05)/differenceInDays;
+	console.log("X Pixels per day: " + pixelsPerDay);
+	
+	//combine/filter grades that have the same due date together
+	var gradeLoads = [];
+	for (let i=0; i<data.length; i++) {
+		let duedate = new Date(data[i].due * 1000);
+		let dateObject = (duedate.getMonth()+1) + '/' + duedate.getDay() + '/' + duedate.getFullYear()
+		let assignment = {};
+		assignment.duedate = dateObject;
+		assignment.gradeweight = data[i].weight;
+		assignment.name = data[i].itemname; 
+		gradeLoads.push(assignment);
+	}
+	console.log(gradeLoads);
+
+	//calculate the weight for each date
+	let heatmapData = {}
+	for (let i=0; i<data.length;i++) {
+		let dueDate = {};
+		
+		let assignmentDueDate = gradeLoads[i].duedate;
+
+		if (assignmentDueDate in heatmapData) {
+			let totalWeight = (heatmapData[assignmentDueDate] + gradeLoads[i].gradeweight);
+			heatmapData[assignmentDueDate] = totalWeight;
+		} else {
+			heatmapData[assignmentDueDate] = gradeLoads[i].gradeweight;
+		}
+	}
+	console.log(heatmapData);
+
+	
+
+	
+
+
+	plotPoint(100,100,data[0],scale,draw);
 	
 }
-function drawAssignment(x, y, artifact, scale, draw) {
-            let x1 = x;
-            let y1 = y;
-            let x2 = x1 + (artifact.weight * scale/100);
-            let y2 = y1 - (artifact.score * artifact.weight)*scale/100;
-            let lineString = `${x1},${scale} ${x1},${y1} ${x2},${y2} ${x2},${scale}`;
-            let p = draw.polygon(lineString);
-            p.stroke({color: 'darkblue', width: 1});
-            p.fill('blue');
-            p.opacity(.5);
-			p.addClass('gradeStuff');
-			var text;
-            p.click(function() {
-				console.log("onclick drawassignment");
-				
-				var grade = prompt(promptString, "%");
-				if (grade == null || grade == "") {
-					console.log("User abandoned what-if");
-				} else {
-					let whatif = Number(grade);
-					if (whatif > 1) {
-						whatif = whatif/100; //convert to a decimal
-					}
-					
-					artifact.score =  whatif;
-					var list = SVG.find('.gradeStuff')
-					list.remove();
-					drawAssignments(scale, draw,data);
-				}
-            });
-			p.mouseover(function() {
-				var list = SVG.find('.projectionText')
-				list.remove();
-				
-				p.fill('grey');
-				let grade = artifact.score;
-				let weight = artifact.weight;
-				let average = artifact.averageScore;
-				text = draw.text(gradeString + ": " + grade*100 +"%, "+  weightString + ": " + weight + "%, "+ averageString + ": " + average*100 + "%");
-				text.x(scale*1.1);
-				text.y(0);
-				text.addClass('temp');
-				text.font({
-					size: scale/25
-				})
-			});
-			p.mouseout(function() {
-				p.fill('blue');
-				var list = SVG.find('.temp')
-				list.remove();
-			});
 
-            draw.line(x1 + (x2-x1)/2 ,scale,x1 + (x2-x1)/2,scale+10).stroke({color: 'blue', width: 1, linecap: 'round'})
-            var title = draw.text(artifact.itemname);
-			title.x(x1 + (x2-x1)/4);
-            title.y(scale+20);
-            title.rotate(40);
-            
-            return { xs: x2, ys: y2 };
+function plotPoint(x, y, artifact, scale, draw) {
+			var point = draw.circle(4);
+			point.x = x;
+			point.y = y;
+			
+
+            return {};
 }     
         
 
@@ -106,55 +114,3 @@ function drawText(x,y,message,fontsize,draw){
 	})
 }
 
-
-function drawAssignments(scale, draw,data){
-	//Draw Average Student Grades
-	let averageX = 0;
-	let averageY = scale;
-	for (let i=0; i<data.length; i++) {
-		let {xs, ys} = drawAverageGrades(averageX, averageY, data[i], scale, draw);
-		averageX=xs;
-		averageY=ys;
-	}
-
-	//Draw Student's Current Grade
-	let x = 0;
-	let y = scale;
-	let yourGrades = []; //assume no grades yet -> average of zero
-	
-	for (let i=0; i<data.length; i++) {
-		let {xs, ys} = drawAssignment(x, y, data[i], scale, draw);
-		if (data[i].score != null) {
-			yourGrades.push(data[i].score);
-		}
-		x=xs;
-		y=ys;
-	}
-
-	let predictX = 0;
-	let predictY = scale;
-	let averageGrade = yourGrades.reduce(function(a,b) {
-		return a + b;
-	}, 0);
-	averageGrade = averageGrade / (yourGrades.length); 
-	drawPrediction(predictX,predictY,data,scale,draw,averageGrade);
-	
-}
-
-function drawChart(scale, svg){
-	var draw = svg;
-	var scale = scale;
-	
-	
-	
-	var fontsize = scale/25;
-	var fontFamily = 'Arial';
-
-	var aGrade = draw.text("A");
-	aGrade.x(scale+scale*.01);
-	aGrade.y(scale*.04);
-	aGrade.font({
-		family: fontFamily,
-		size: fontsize
-	})
-}
