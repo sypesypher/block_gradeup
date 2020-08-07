@@ -70,11 +70,11 @@
 		
 		let data = getData();
 		let scale = 500;
-		var draw = SVG().addTo('#svgContainer').size(scale + scale*2/3,scale+scale/6); 
-		drawChart(scale,draw);
-		drawAssignments(scale, draw,data);
-		
+		//var draw = SVG().addTo('#svgContainer').size(scale + scale*2/3,scale+scale/6); 
+		//drawChart(scale,draw);
+		//drawAssignments(scale, draw,data);
+		classStartDate = 1588699454;
 		var draw2 = SVG().addTo('#svgContainer2').size(scale+scale*.66,scale/2);
-		drawHeatMap(scale,draw2,data);
+		drawHeatMap(scale,draw2,data,classStartDate);
      </script>
 </html>
