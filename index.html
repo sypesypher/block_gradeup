@@ -6,7 +6,7 @@
 	<script src="gradeupjs/grades2.js"></script>
 	<script src="gradeupjs/burnup.js"></script>
   
-	<h2 style="font-size:30px; color:green; text-align:center">Gradeup 2</h2>
+	<h2 style="font-size:30px; color:green; text-align:left">Gradeup</h2>
 	
 	<label for="cars">Which Course do you want to see?</label>
 	<select name="cars" id="courseSelection" onchange="valueChanged()">
@@ -15,9 +15,11 @@
 	</select>
 	
 	Change the Scale: <input type="number" id="scaleSelection" name="scaleInput" value="500" min="100" max="1000" onchange="valueChanged()">
-	<br><br>
 	 
+	<h2 style="font-size:30px; color:green; text-align:left">Grades Burnup</h2>
 	<div id="svgContainer"></div>
+	
+	<h2 style="font-size:30px; color:green; text-align:left">Course Load Heatmap</h2>
 	<div id="svgContainer2"></div>
 		
     <script>
