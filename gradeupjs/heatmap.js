@@ -21,11 +21,15 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  
-function drawHeatMap(scale,svg,data) {
+function drawHeatMap(scale,svg,data,classStartDate) {
 	var draw = svg;
 	var scale = scale;
 	var fontsize = scale/25;
-	var fontFamily = 'Arial';
+	
+	//heatmap change variable constants
+	let dayPerPercent = 1; //slope 
+	let yScalePerWeight2 = 3.5;
+	
 	
 	//draw the heatmap border
 	borderx = scale*1.5;
@@ -34,116 +38,195 @@ function drawHeatMap(scale,svg,data) {
 	border.stroke({color: 'grey', width: 2});
 	border.fill('none');
 
-	//find the last due date (this will be the largest Unix timestamp value)
+	//find start and end dates of chart
+	var courseStartDate = new Date(classStartDate * 1000);
+	let courseStartDateObjectString = (courseStartDate.getMonth()+1) + '/' + courseStartDate.getDay() + '/' + courseStartDate.getFullYear();
+	drawTextHeatmap(-(scale/50),scale/3 + scale*.05, courseStartDateObjectString, scale/30, draw, 90);
 	var lastDueUnix = data[0].due;
-	var firstDueUnix = data[0].due;
 	for (let i=1; i<data.length; i++) {
 		if (data[i].due > lastDueUnix) {
 			lastDueUnix = data[i].due;
 			//console.log("assignment:" + data[i].itemname + " due at:" + data[i].due)
 		}
-		if (data[i].due < firstDueUnix) {
-			firstDueUnix = data[i].due;
-		}
 	}
 	var lastDate = new Date(lastDueUnix * 1000); //https://www.epochconverter.com/ <- to understand what is happening
-	var firstDate = new Date(firstDueUnix * 1000);
-	//console.log(lastDate.getDay() + '/' + (lastDate.getMonth()+1) + '/' + lastDate.getFullYear());
-	//console.log(firstDate.getDay() + '/' + (firstDate.getMonth()+1) + '/' + firstDate.getFullYear());
 
-	//calculate the scale for drawing
-	var differenceInDays = (lastDate.getTime() - firstDate.getTime()) / (1000 * 3600 * 24); //how many days between start and end point
-	//console.log("days between first and last assignment: " + differenceInDays);
-	let xScalePerDay = ((scale * 1.5)-scale*.05)/differenceInDays;
-	//console.log("X Pixels per day: " + xScalePerDay);
+	//calculate the scale for drawing using days between start of course and last assignment due
+	var differenceInDays = (lastDate.getTime() - courseStartDate.getTime()) / (1000 * 3600 * 24);
+	let xScalePerDay = borderx/differenceInDays;
+	console.log("xScalePerDay: " + xScalePerDay);
 	
 	//combine/filter grades that have the same due date together
 	var gradeLoads = [];
 	for (let i=0; i<data.length; i++) {
 		let duedate = new Date(data[i].due * 1000);
-		let daysTill = (duedate.getTime() - firstDate.getTime()) / (1000 * 3600 * 24);
-		let dateObject = (duedate.getMonth()+1) + '/' + duedate.getDay() + '/' + duedate.getFullYear()
+		let daysTill = (duedate.getTime() - courseStartDate.getTime()) / (1000 * 3600 * 24);
+		let dateObject = (duedate.getMonth()+1) + '/' + (duedate.getDay()+1) + '/' + duedate.getFullYear()
 		let assignment = {};
 		assignment.duedate = dateObject;
 		assignment.gradeweight = data[i].weight;
 		assignment.name = data[i].itemname; 
-		assignment.xCoordinate = Math.floor(daysTill * xScalePerDay);
+		assignment.xEnd = Math.floor(daysTill * xScalePerDay);
 		gradeLoads.push(assignment);
 	}
+	//console.log("gradeLoads ");
 	//console.log(gradeLoads);
 
-	//calculate the weight for each date
-	let heatmapData = {}
-	for (let i=0; i<gradeLoads.length;i++) {
-		let dueDate = {};
-		let assignmentDueDate = gradeLoads[i].duedate;
-
-		if (assignmentDueDate in heatmapData) {
-			let totalWeight = (heatmapData[assignmentDueDate] + gradeLoads[i].gradeweight);
-			heatmapData[assignmentDueDate] = totalWeight;
-		} else {
-			heatmapData[assignmentDueDate] = gradeLoads[i].gradeweight;
-		}
-	}
-	//console.log(heatmapData);
-
-	//find the highest weight of any date to set as the upper limit of the Y scale
-	let heaviestWeight = null;
-	for (key in heatmapData) {
-		//console.log(key + " : " + heatmapData[key]);
-		if (heaviestWeight == null || heaviestWeight < heatmapData[key]) {
-			heaviestWeight = heatmapData[key];
-		}
-	}
-	yScalePerWeight = (scale/3) / heaviestWeight;
-	//console.log("yScalePerWeight: " + yScalePerWeight);
-	//console.log(heaviestWeight);
-	drawTextHeatmap(scale*1.52, 0, heaviestWeight + "%",scale/30, draw);
-	drawTextHeatmap(scale*1.52, (scale/6 -scale*.015), (heaviestWeight/2) + "%",scale/30, draw);
-	drawTextHeatmap(scale*1.52, (scale/3 -scale*.03), "0%",scale/30, draw);
-
-
-	//get plot Points for each heatmap Point
-
-	let ypoints = [];
-	let xpoints = [];
-	for (key in heatmapData) {
-		let x = 0;
-		for (let i=0; i<gradeLoads.length;i++) {
-			if (gradeLoads[i].duedate == key){
-				x = gradeLoads[i].xCoordinate + scale*.04;
-				break;
+	var heatmapData2 = [];
+	for (let i=0; i<gradeLoads.length; i++) {
+		let foundDup = false;
+		for (let j = 0; j <heatmapData2.length; j++) {
+			//check if there is a duplicate date already in heatmapData2, if there is, add the weight to the date
+			if (heatmapData2[j].duedate == gradeLoads[i].duedate) {
+				heatmapData2[j].gradeweight += gradeLoads[i].gradeweight;
+				foundDup = true;
 			}
 		}
-		let y = (scale/3) - (heatmapData[key] * yScalePerWeight);
-		//console.log(key + " (x,y): (" + x + "," + y + ")");
+		if (!foundDup) {
+			let duedateObject = {};
+			duedateObject.duedate = gradeLoads[i].duedate;
+			duedateObject.gradeweight = gradeLoads[i].gradeweight;
+			duedateObject.xEnd = gradeLoads[i].xEnd;
+			duedateObject.xStart = Math.floor(duedateObject.xEnd - (duedateObject.gradeweight*xScalePerDay*dayPerPercent));
+			heatmapData2.push(duedateObject);
+		}
+	
+	}
+	console.log("heatmapData2 ");
+	console.log(heatmapData2);
+
+
+	
+	
+	//console.log(heaviestWeight);
+	//drawTextHeatmap(scale*1.52, 0, heaviestWeight + "%",scale/30, draw);
+	//drawTextHeatmap(scale*1.52, (scale/6 -scale*.015), (heaviestWeight/2) + "%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3 -scale*.03), "0%",scale/30, draw);
+	drawTextHeatmap(scale*1.51, scale*.13, "Percent of Grade", scale/25, draw, 90);
+	drawTextHeatmap(scale*.7, scale/3+scale*.12, "Due Date", scale/25, draw);
+
+	//get all plot Points (start and end) for each due date set
+	let ypoints = [];
+	let xpoints = [];
+	let points = [];
+	for (let i = 0; i< heatmapData2.length; i++) {
+		let x = heatmapData2[i].xEnd;
+		let y = (scale/3) - (heatmapData2[i].gradeweight * yScalePerWeight2);
+		
 		plotPoint(x,y,draw);
-		drawTextHeatmap(x-scale*.03,scale/3 + scale*.05, key, scale/30, draw, 90);
+		drawTextHeatmap(x-scale*.03,scale/3 + scale*.05, heatmapData2[i].duedate, scale/30, draw, 90);
+		
+		let endPoint = {};
+		endPoint.x = Math.floor(x);
+		endPoint.y = Math.floor(y);
+		endPoint.dueNow = true;
+		endPoint.weight = heatmapData2[i].gradeweight;
+		endPoint.start = Math.floor(heatmapData2[i].xStart); //this is useful later
+		
+		let startPoint = {};
+		startPoint.x = Math.floor(heatmapData2[i].xStart);
+		startPoint.y = Math.floor(scale/3);
+		startPoint.dueNow = false;
+		startPoint.weight = heatmapData2[i].gradeweight;
 
-		xpoints.push(x);
-		ypoints.push(y);
+		points.push(startPoint);
+		points.push(endPoint);
+	}	
+	points.sort((a, b) => (a.x > b.x) ? 1 : -1)
+	console.log("sorted?");
+	console.log(points);
+
+	
+
+	let heatMapLineString = "0," + scale/3 +  " ";
+	let zeroY = Math.floor(scale/3);
+	let lastX = 0;
+	let lastY = zeroY;
+	let currentWeight = 0;
+	let oldWeight = 0;
+	let assignmentsInProgress = 0;
+	
+	for (let i =0; i<points.length;i++) {
+		if (currentWeight == 0) { //no work currently, new start date GOOD
+			console.log("new start no work yet");
+			currentWeight += points[i].weight;
+			//plot the start point
+			heatMapLineString += addPoint(points[i].x,zeroY);
+			lastX = points[i].x;
+			lastY = zeroY;
+			assignmentsInProgress += 1;
+		} else {
+			if (points[i].dueNow) {
+				currentWeight -= points[i].weight;
+				if (currentWeight == 0) {
+					//due date ends and goes to zero
+					let daysbetween = (points[i].x - lastX) / xScalePerDay; //get the days since last point
+					let y = (daysbetween / dayPerPercent) * currentWeight;
+					heatMapLineString += addPoint(points[i].x,points[i].y);
+					heatMapLineString += addPoint(points[i].x,zeroY);
+					assignmentsInProgress -= 1;
+				} else {
+					//line doesn't go to zero
+					//heatMapLineString += addPoint(points[i].x,zeroY - (currentWeight * yScalePerWeight2));
+					//currentWeight -= points[i].weight;
+					//assignmentsInProgress -= 1;
+					
+					/*heatMapLineString += addPoint(points[i].x,lastY + (points[i].weight * yScalePerWeight2));
+					lastX = points[i].x;
+					lastY = lastY + (oldWeight * yScalePerWeight2);
+					*/
+				}
+			} else {
+				
+				/**
+				//add another project to load
+				let daysbetween = (points[i].x - lastX) / xScalePerDay; //get the days since last point
+				let y = (daysbetween / dayPerPercent) * currentWeight;
+				console.log(lastY);
+				
+				assignmentsInProgress += 1;
+				heatMapLineString += addPoint(points[i].x,lastY - (points[i].x - lastX) * assignmentsInProgress * yScalePerWeight2);
+				lastY = zeroY - y;
+				lastX = points[i].x;
+				oldWeight = currentWeight;
+				currentWeight += points[i].weight; //add the new weight	
+				assignmentsInProgress += 1;
+				*/
+			}					
+		}
+		
 	}
-	//console.log(xpoints);
-	//console.log(ypoints);
+	heatMapLineString += scale*1.5 + "," + scale/3 + " 0," + scale/3 + " 0,0";
 
-	let heatmapLineString = "0," + scale/3 + " ";
-	for (let i =0; i<xpoints.length;i++) {
-		heatmapLineString += xpoints[i]+2;
-		heatmapLineString += ",";
-		heatmapLineString += ypoints[i];
-		heatmapLineString += " " + (xpoints[i]+2) + "," + scale/3 + " ";
-	}
-	heatmapLineString += scale*1.5 + "," + scale/3 + " 0," + scale/3 + " 0,0";
+	console.log(heatMapLineString);
 
-	//console.log(heatmapLineString);
+	//console.log(heatMapLineString);
 	var gradient = draw.gradient('linear', function(add) {
 		add.stop(0, 'red')
 		add.stop(1, 'green')
 	  })
 	gradient.from(0,0).to(0,1);
-	var heatline = draw.polyline(heatmapLineString);
+	var heatline = draw.polyline(heatMapLineString);
 	heatline.stroke({color: 'red', width: 2});
 	heatline.fill(gradient);
+	heatline.opacity(.5);
+	
+	/*
+	//find the highest weight of any date to set as the upper limit of the Y scale
+	let heaviestWeight = null;
+	for (let i =0; i < heatmapData2.length; i++) {
+		//console.log(key + " : " + heatmapData[key]);
+		if (heaviestWeight == null || heaviestWeight < heatmapData2[i].gradeweight) {
+			heaviestWeight = heatmapData2[i].gradeweight;
+		}
+	}
+	yScalePerWeight = (scale/3) / heaviestWeight;
+	*/
+	
+}
+
+function addPoint(x,y) {
+	return x + "," + y + " ";
 }
 
 function plotPoint(x, y, draw) {
