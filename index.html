@@ -1,29 +1,25 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-		<script src="gradeupjs/heatmap.js"></script>
-		<script src="gradeupjs/grades2.js"></script>
-		<script src="gradeupjs/burnup.js"></script>
-    </head>
-    <body style="background-color: rgb(119, 190, 187);">
-        <h2 style="font-size:30px; color:green; text-align:center">Gradeup 2</h2>
-        
+
+	<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+	<script src="gradeupjs/heatmap.js"></script>
+	<script src="gradeupjs/grades2.js"></script>
+	<script src="gradeupjs/burnup.js"></script>
+  
+	<h2 style="font-size:30px; color:green; text-align:center">Gradeup 2</h2>
+	
+	<label for="cars">Which Course do you want to see?</label>
+	<select name="cars" id="courseSelection" onchange="valueChanged()">
+		<option value="2">Math</option>
+		<option value="4">English</option>
+	</select>
+	
+	Change the Scale: <input type="number" id="scaleSelection" name="scaleInput" value="500" min="100" max="1000" onchange="valueChanged()">
+	<br><br>
+	 
+	<div id="svgContainer"></div>
+	<div id="svgContainer2"></div>
 		
-		<label for="cars">Which Course do you want to see?</label>
-			<select name="cars" id="courseSelection" onchange="valueChanged()">
-			<option value="2">Math</option>
-			<option value="4">English</option> <! the value is the course id?>
-		</select>
-		
-		Change the Scale: <input type="number" id="scaleSelection" name="scaleInput" value="500" min="100" max="1000" onchange="valueChanged()">
-		<br><br>
-		 
-		<div id="svgContainer"></div>
-		<div id="svgContainer2"></div>
-		
-    </body>
     <script>
 		/*TODO:			
 			update block_gradeup.php to save all course grades so the above works^
