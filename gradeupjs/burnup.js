@@ -98,7 +98,7 @@ function drawPrediction(x, y, data, scale, draw, percentage) { //This could prob
 			x4 = x2;
 			y4 = y2;
 		} else {
-			console.log("null value found")
+			//console.log("null value found")
 			var x2 = x1
 			var x4 = scale;
 			var y4 = y1 - (scale-x2);

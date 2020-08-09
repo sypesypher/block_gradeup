@@ -23,12 +23,11 @@
  
 function drawHeatMap(scale,svg,data,classStartDate) {
 	var draw = svg;
-	var scale = scale;
 	var fontsize = scale/25;
 	
 	//heatmap change variable constants
 	let yScalePerWeight2 = 7;
-	
+
 	
 	//draw the heatmap border
 	borderx = scale*1.5;
@@ -49,11 +48,11 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 		}
 	}
 	var lastDate = new Date(lastDueUnix * 1000); //https://www.epochconverter.com/ <- to understand what is happening
-
 	//calculate the scale for drawing using days between start of course and last assignment due
 	var differenceInDays = (lastDate.getTime() - courseStartDate.getTime()) / (1000 * 3600 * 24);
 	let xScalePerDay = borderx/differenceInDays;
 	console.log("xScalePerDay: " + xScalePerDay);
+	console.log("difference in grades: " + differenceInDays)
 	
 	//combine/filter grades that have the same due date together
 	var gradeLoads = [];
@@ -96,10 +95,13 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 	console.log(heatmapData2);
 
 
-	
-	
 	//console.log(heaviestWeight);
-	//drawTextHeatmap(scale*1.52, 0, heaviestWeight + "%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3) - (10 * yScalePerWeight2), "10%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3) - (20 * yScalePerWeight2), "20%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3) - (30 * yScalePerWeight2), "30%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3) - (40 * yScalePerWeight2), "40%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3) - (50 * yScalePerWeight2), "50%",scale/30, draw);
+	
 	//drawTextHeatmap(scale*1.52, (scale/6 -scale*.015), (heaviestWeight/2) + "%",scale/30, draw);
 	drawTextHeatmap(scale*1.52, (scale/3 -scale*.03), "0%",scale/30, draw);
 	drawTextHeatmap(scale*1.51, scale*.13, "Percent of Grade", scale/25, draw, 90);
@@ -253,7 +255,7 @@ function plotPoint(x, y, draw,color='blue') {
 function drawTextHeatmap(x,y,message,fontsize,draw,rotation=0){
 	//console.log(rotation);
 	var text = draw.text(message);
-	text.x(x);
+	text.x(x-7);
 	text.y(y);
 	text.rotate(rotation);
 	text.font({
