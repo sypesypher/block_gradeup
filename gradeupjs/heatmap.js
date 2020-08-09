@@ -27,8 +27,7 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 	var fontsize = scale/25;
 	
 	//heatmap change variable constants
-	let dayPerPercent = 1; //slope 
-	let yScalePerWeight2 = 3.5;
+	let yScalePerWeight2 = 7;
 	
 	
 	//draw the heatmap border
@@ -87,7 +86,8 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 			duedateObject.duedate = gradeLoads[i].duedate;
 			duedateObject.gradeweight = gradeLoads[i].gradeweight;
 			duedateObject.xEnd = gradeLoads[i].xEnd;
-			duedateObject.xStart = Math.floor(duedateObject.xEnd - (duedateObject.gradeweight*xScalePerDay*dayPerPercent));
+			duedateObject.xStart = Math.floor(duedateObject.xEnd - (duedateObject.gradeweight*xScalePerDay));
+			duedateObject.name = gradeLoads[i].name;
 			heatmapData2.push(duedateObject);
 		}
 	
@@ -122,12 +122,14 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 		endPoint.dueNow = true;
 		endPoint.weight = heatmapData2[i].gradeweight;
 		endPoint.start = Math.floor(heatmapData2[i].xStart); //this is useful later
-		
+		endPoint.name = heatmapData2[i].name;
+
 		let startPoint = {};
 		startPoint.x = Math.floor(heatmapData2[i].xStart);
 		startPoint.y = Math.floor(scale/3);
 		startPoint.dueNow = false;
 		startPoint.weight = heatmapData2[i].gradeweight;
+		startPoint.name = heatmapData2[i].name;
 
 		points.push(startPoint);
 		points.push(endPoint);
@@ -143,7 +145,6 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 	let lastX = 0;
 	let lastY = zeroY;
 	let currentWeight = 0;
-	let oldWeight = 0;
 	let assignmentsInProgress = 0;
 	
 	for (let i =0; i<points.length;i++) {
@@ -151,7 +152,7 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 			//console.log("new start no work yet");
 			currentWeight += points[i].weight;
 			//plot the start point
-			heatMapLineString += addPoint(points[i].x,zeroY,draw);
+			heatMapLineString += addPoint(points[i].x,zeroY,draw,'yellow');
 			lastX = points[i].x;
 			lastY = zeroY;
 			assignmentsInProgress += 1;
@@ -160,23 +161,24 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 				if ((currentWeight - points[i].weight) == 0) {
 					//due date ends and goes to zero
 					currentWeight -= points[i].weight;
-					let daysbetween = (points[i].x - lastX) / xScalePerDay; //get the days since last point
-					let y = ((daysbetween * assignmentsInProgress) / dayPerPercent) * currentWeight;
+					//let daysbetween = (points[i].x - lastX) / xScalePerDay; //get the days since last point
+
 					heatMapLineString += addPoint(points[i].x,points[i].y,draw);
 					heatMapLineString += addPoint(points[i].x,zeroY,draw);
 					lastX = points[i].x;
 					lastY = zeroY;
 					assignmentsInProgress -= 1;
 				} else {
-					
 					//line doesn't go to zero
 					let daysbetween = (points[i].x - lastX) / xScalePerDay;
-					let y = zeroY - (daysbetween * assignmentsInProgress * dayPerPercent * yScalePerWeight2) - (zeroY - lastY);
+					let y = zeroY - (daysbetween * assignmentsInProgress * yScalePerWeight2) - (zeroY - lastY);
 					
 					
 					heatMapLineString += addPoint(points[i].x, y, draw,'green');
-					y += points[i].weight * yScalePerWeight2;
-					heatMapLineString += addPoint(points[i].x, y, draw,'red');
+					y += (points[i].weight * yScalePerWeight2);
+					console.log(points[i].name)
+					console.log(points[i].weight);
+					heatMapLineString += addPoint(points[i].x, y, draw,'green');
 					lastX = points[i].x;
 					lastY = y;
 
@@ -186,12 +188,10 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 			} else {
 				//add another project to load
 				let daysbetween = (points[i].x - lastX) / xScalePerDay; //get the days since last point
-
-				let y = zeroY - (daysbetween * assignmentsInProgress * dayPerPercent * yScalePerWeight2) - (zeroY - lastY);
+				let y = zeroY - (daysbetween * assignmentsInProgress  * yScalePerWeight2) - (zeroY - lastY);
 				heatMapLineString += addPoint(points[i].x, y, draw,'red');
 				lastY = y;
 				lastX = points[i].x;
-				oldWeight = currentWeight;
 				currentWeight += points[i].weight; //add the new weight	
 				assignmentsInProgress += 1;
 			}					
@@ -243,7 +243,7 @@ function plotPoint(x, y, draw,color='blue') {
 	});
 
 	point.mouseout(function() {
-		point.fill('blue');
+		point.fill(color);
 	});
 	
 	return {};
