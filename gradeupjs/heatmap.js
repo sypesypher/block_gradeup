@@ -113,7 +113,7 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 		let x = heatmapData2[i].xEnd;
 		let y = (scale/3) - (heatmapData2[i].gradeweight * yScalePerWeight2);
 		
-		plotPoint(x,y,draw);
+		//plotPoint(x,y,draw);
 		drawTextHeatmap(x-scale*.03,scale/3 + scale*.05, heatmapData2[i].duedate, scale/30, draw, 90);
 		
 		let endPoint = {};
@@ -148,10 +148,10 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 	
 	for (let i =0; i<points.length;i++) {
 		if (currentWeight == 0) { //no work currently, new start date GOOD
-			console.log("new start no work yet");
+			//console.log("new start no work yet");
 			currentWeight += points[i].weight;
 			//plot the start point
-			heatMapLineString += addPoint(points[i].x,zeroY);
+			heatMapLineString += addPoint(points[i].x,zeroY,draw);
 			lastX = points[i].x;
 			lastY = zeroY;
 			assignmentsInProgress += 1;
@@ -161,36 +161,39 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 					//due date ends and goes to zero
 					currentWeight -= points[i].weight;
 					let daysbetween = (points[i].x - lastX) / xScalePerDay; //get the days since last point
-					let y = (daysbetween / dayPerPercent) * currentWeight;
-					heatMapLineString += addPoint(points[i].x,points[i].y);
-					heatMapLineString += addPoint(points[i].x,zeroY);
+					let y = ((daysbetween * assignmentsInProgress) / dayPerPercent) * currentWeight;
+					heatMapLineString += addPoint(points[i].x,points[i].y,draw);
+					heatMapLineString += addPoint(points[i].x,zeroY,draw);
+					lastX = points[i].x;
+					lastY = zeroY;
 					assignmentsInProgress -= 1;
 				} else {
-					currentWeight -= points[i].weight;
-					//line doesn't go to zero
-					//heatMapLineString += addPoint(points[i].x,zeroY - (currentWeight * yScalePerWeight2));
-					//currentWeight -= points[i].weight;
-					//assignmentsInProgress -= 1;
 					
-					/*heatMapLineString += addPoint(points[i].x,lastY + (points[i].weight * yScalePerWeight2));
+					//line doesn't go to zero
+					let daysbetween = (points[i].x - lastX) / xScalePerDay;
+					let y = zeroY - (daysbetween * assignmentsInProgress * dayPerPercent * yScalePerWeight2) - (zeroY - lastY);
+					
+					
+					heatMapLineString += addPoint(points[i].x, y, draw,'green');
+					y += points[i].weight * yScalePerWeight2;
+					heatMapLineString += addPoint(points[i].x, y, draw,'red');
 					lastX = points[i].x;
-					lastY = lastY + (oldWeight * yScalePerWeight2);
-					*/
+					lastY = y;
+
+					currentWeight -= points[i].weight;
+					assignmentsInProgress -= 1;
 				}
 			} else {
 				//add another project to load
 				let daysbetween = (points[i].x - lastX) / xScalePerDay; //get the days since last point
-				let y = (daysbetween / dayPerPercent) * currentWeight;
-				console.log(lastY);
-				
-				assignmentsInProgress += 1;
-				heatMapLineString += addPoint(points[i].x,lastY - (points[i].x - lastX) * assignmentsInProgress * yScalePerWeight2);
-				lastY = zeroY - y;
+
+				let y = zeroY - (daysbetween * assignmentsInProgress * dayPerPercent * yScalePerWeight2) - (zeroY - lastY);
+				heatMapLineString += addPoint(points[i].x, y, draw,'red');
+				lastY = y;
 				lastX = points[i].x;
 				oldWeight = currentWeight;
 				currentWeight += points[i].weight; //add the new weight	
 				assignmentsInProgress += 1;
-				
 			}					
 		}
 		
@@ -224,15 +227,16 @@ function drawHeatMap(scale,svg,data,classStartDate) {
 	
 }
 
-function addPoint(x,y) {
+function addPoint(x,y,draw,color='blue') {
+	plotPoint(x,y,draw,color=color)
 	return x + "," + y + " ";
 }
 
-function plotPoint(x, y, draw) {
-	var point = draw.circle(10);
+function plotPoint(x, y, draw,color='blue') {
+	var point = draw.circle(4);
 	point.x(x);
 	point.y(y);
-	point.fill('blue');
+	point.fill(color);
 	point.mouseover(function() {
 		//use this to add functionality later - maybe show what assignments are due on each date
 		point.fill('grey');
