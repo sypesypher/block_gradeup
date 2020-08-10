@@ -58,9 +58,7 @@ class block_gradeup extends block_base {
 			$dropdownCourses;
 		}
 
-		$courseStartDates = [];
 		foreach ($courses as $course) {
-			$courseStartDates[$course->id] = $course->startdate;
 			if ($course->id == 2) { //TODO: the "2" is just a placeholder until the user can select which course they want to display
 				$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
 				
@@ -148,7 +146,6 @@ class block_gradeup extends block_base {
 				$this->content->text .= '</script>';
 			}
 		}
-		print_r($courseStartDates);
 
 		$this->content->text .= '<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>'; //SVG.js
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/heatmap.js"></script>';
@@ -173,10 +170,16 @@ class block_gradeup extends block_base {
 		$this->content->text .= '<div id="svgContainer2"></div>';
 		
 		
-		
-
 		//Define all the needed String values reading from lang directory
 		$this->content->text .= '<script>';
+		
+		$courseStartDates = 'let courseStartDates = {};';
+		foreach ($courses as $course) {
+			$courseStartDates .= 'courseStartDates[' . $course->id . '] = ' . $course->startdate . ';';
+		}
+		$this->content->text .= $courseStartDates ;
+
+
 		$this->content->text .= 'let promptString = \'' . get_string('promptString', 'block_gradeup') . '\';';
         $this->content->text .= 'let gradeString = \'' . get_string('gradeString', 'block_gradeup') . '\';';
         $this->content->text .= 'let weightString = \'' . get_string('weightString', 'block_gradeup') . '\';';
@@ -197,14 +200,13 @@ class block_gradeup extends block_base {
 		$this->content->text .= '};';
 		
 		$this->content->text .= 'let data = getData();';
-		$this->content->text .= 'let scale = 600;';
-		$this->content->text .= 'let heatmapScale = 7;';
-		$this->content->text .= 'var draw = SVG().addTo(\'#svgContainer\').size(scale + scale*2/3,scale+scale/6);'; //additional area for chart legend and assignment names
-		$this->content->text .= 'drawChart(scale,draw);';
-		$this->content->text .= 'drawAssignments(scale, draw,data);';
-		$this->content->text .= 'classStartDate = ' . strval($courseStartDates[2]) . ';';
-		$this->content->text .= 'var draw2 = SVG().addTo(\'#svgContainer2\').size(scale+scale*.66,scale/2);';
-		$this->content->text .= 'drawHeatMap(scale,draw2,data,classStartDate,heatmapScale);';
+		$this->content->text .= 'var draw = SVG().addTo(\'#svgContainer\').size(700 + 700*2/3,700+700/6);'; //additional area for chart legend and assignment names
+		$this->content->text .= 'drawChart(700,draw);';
+		$this->content->text .= 'drawAssignments(700, draw,data);';
+
+		$this->content->text .= 'var draw2 = SVG().addTo(\'#svgContainer2\').size(700+700*.66,700/2);';
+		$this->content->text .= 'drawHeatMap(700,draw2,data,1592052000,7);';
+		$this->content->text .= 'valueChanged();';
 		$this->content->text .= '</script>';
 
 		return $this->content;
