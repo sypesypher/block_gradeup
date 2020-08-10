@@ -62,93 +62,91 @@ class block_gradeup extends block_base {
 		$this->content->text .= 'let allGrades = {};';
 		$this->content->text .= '</script>';
 		foreach ($courses as $course) {
-			if ($course->id == 2) { //TODO: the "2" is just a placeholder until the user can select which course they want to display
-				$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
-				
-				//Get the total points in a course to calculate weights of assignments
-				$getTotalCoursePoints = "SELECT SUM(grade) as totalPoints FROM mdl_assign a WHERE a.course=". $course->id ."; ";
-				$totalCoursePoints = $DB->get_records_sql($getTotalCoursePoints);
-				$totalPoints = key($totalCoursePoints);
-				
-				//Get user grades from the moodle database
-				$getUserGrades = "SELECT q1.itemname, q1.finalgrade, q1.grademax, q1.duedate as due,q2.averagegrade FROM (
-									SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
-										FROM mdl_grade_grades g 
-										INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
-										INNER JOIN mdl_assign a ON a.name=gi.itemname 
-										WHERE g.userid = ". $USER->id ." AND gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
-										ORDER BY a.duedate
-									) q1 INNER JOIN (
-										SELECT gi.itemname, AVG(finalgrade) as averageGrade
-										FROM mdl_grade_grades g 
-										INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
-										INNER JOIN mdl_assign a ON a.name=gi.itemname 
-										WHERE gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
-										GROUP BY itemname
-										ORDER BY gi.itemname
-									) q2 ON q1.itemname=q2.itemname ORDER BY q1.duedate"; 
-				$student_grades = $DB->get_records_sql($getUserGrades);
-				//take the database results and format into a PHP grades Object array 
-				foreach ($student_grades as $grade) {
-					$grade->weight = $grade->grademax / $totalPoints * 100; //calculate the weight of an assignment as a value out of 100
-					if ($grade->finalgrade == null){
-						$grade->score =  null;
-						$grade->originalScore = null;
-					} else {
-						$grade->score =  ($grade->finalgrade) / ($grade->grademax);
-						$grade->originalScore = $grade->score;
-					}
-					if ($grade->averagegrade == null) {
-						$grade->averageScore = null;
-					} else {
-						$grade->averageScore = ($grade->averagegrade) / ($grade->grademax);
-					}
-					
+			$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
+			
+			//Get the total points in a course to calculate weights of assignments
+			$getTotalCoursePoints = "SELECT SUM(grade) as totalPoints FROM mdl_assign a WHERE a.course=". $course->id ."; ";
+			$totalCoursePoints = $DB->get_records_sql($getTotalCoursePoints);
+			$totalPoints = key($totalCoursePoints);
+			
+			//Get user grades from the moodle database
+			$getUserGrades = "SELECT q1.itemname, q1.finalgrade, q1.grademax, q1.duedate as due,q2.averagegrade FROM (
+								SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
+									FROM mdl_grade_grades g 
+									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
+									INNER JOIN mdl_assign a ON a.name=gi.itemname 
+									WHERE g.userid = ". $USER->id ." AND gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
+									ORDER BY a.duedate
+								) q1 INNER JOIN (
+									SELECT gi.itemname, AVG(finalgrade) as averageGrade
+									FROM mdl_grade_grades g 
+									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
+									INNER JOIN mdl_assign a ON a.name=gi.itemname 
+									WHERE gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
+									GROUP BY itemname
+									ORDER BY gi.itemname
+								) q2 ON q1.itemname=q2.itemname ORDER BY q1.duedate"; 
+			$student_grades = $DB->get_records_sql($getUserGrades);
+			//take the database results and format into a PHP grades Object array 
+			foreach ($student_grades as $grade) {
+				$grade->weight = $grade->grademax / $totalPoints * 100; //calculate the weight of an assignment as a value out of 100
+				if ($grade->finalgrade == null){
+					$grade->score =  null;
+					$grade->originalScore = null;
+				} else {
+					$grade->score =  ($grade->finalgrade) / ($grade->grademax);
+					$grade->originalScore = $grade->score;
+				}
+				if ($grade->averagegrade == null) {
+					$grade->averageScore = null;
+				} else {
+					$grade->averageScore = ($grade->averagegrade) / ($grade->grademax);
 				}
 				
-				//convert php grades objects array to a string (in JSON format) so it can be passed to the javascript, is there a better way? probably
-				$jsonGradesString = "let grades" . $course->id . " = [";
-				foreach ($student_grades as $grade){
-					$jsonGradesString .= "{";
-					$jsonGradesString .= "itemname: \"" . $grade->itemname . "\",";
-					$jsonGradesString .= "weight: " . $grade->weight . ",";
-
-					if ($grade->score == null) {
-						$jsonGradesString .= "score: null,";
-						$jsonGradesString .= "originalScore: null,";
-					} else {
-						$jsonGradesString .= "score: " . $grade->score . ",";
-						$jsonGradesString .= "originalScore: " . $grade->score . ",";
-					}
-
-					if ($grade->averageScore == null) {
-						$jsonGradesString .= "averageScore: null,";
-					} else {
-						$jsonGradesString .= "averageScore: " . $grade->averageScore . ",";
-					}
-					
-					
-					$jsonGradesString .= "due: " . $grade->due;
-					$jsonGradesString .= "}";
-					$jsonGradesString .= ",";
-				}
-				$jsonGradesString = rtrim($jsonGradesString, ","); //remove the comma after the last grade
-				$jsonGradesString .= "];";
-				
-				//TODO: instead of passing the string below,
-				//modify so that instead of "grades = {....." it's "courseID = {...."
-				// 		assign an object[key= courseid] = jsonGradeString
-				//then at end of loop, OBJECT will contain the json string for each class
-				//stringify the object by setting "object = [ "courseID" : {" + Object[courseID] + "}, ..." for each course like above
-				//pass the entire nested object of objects to javascript
-				//then to pull in the grades you need, you will use data=Object[courseID] as the data
-				
-				//pass the json 
-				$this->content->text .= '<script>';
-				$this->content->text .= $jsonGradesString;
-				$this->content->text .= 'allGrades["grades' . $course->id . '"] = grades' . $course->id . ';';
-				$this->content->text .= '</script>';
 			}
+			
+			//convert php grades objects array to a string (in JSON format) so it can be passed to the javascript, is there a better way? probably
+			$jsonGradesString = "let grades" . $course->id . " = [";
+			foreach ($student_grades as $grade){
+				$jsonGradesString .= "{";
+				$jsonGradesString .= "itemname: \"" . $grade->itemname . "\",";
+				$jsonGradesString .= "weight: " . $grade->weight . ",";
+
+				if ($grade->score == null) {
+					$jsonGradesString .= "score: null,";
+					$jsonGradesString .= "originalScore: null,";
+				} else {
+					$jsonGradesString .= "score: " . $grade->score . ",";
+					$jsonGradesString .= "originalScore: " . $grade->score . ",";
+				}
+
+				if ($grade->averageScore == null) {
+					$jsonGradesString .= "averageScore: null,";
+				} else {
+					$jsonGradesString .= "averageScore: " . $grade->averageScore . ",";
+				}
+				
+				
+				$jsonGradesString .= "due: " . $grade->due;
+				$jsonGradesString .= "}";
+				$jsonGradesString .= ",";
+			}
+			$jsonGradesString = rtrim($jsonGradesString, ","); //remove the comma after the last grade
+			$jsonGradesString .= "];";
+			
+			//TODO: instead of passing the string below,
+			//modify so that instead of "grades = {....." it's "courseID = {...."
+			// 		assign an object[key= courseid] = jsonGradeString
+			//then at end of loop, OBJECT will contain the json string for each class
+			//stringify the object by setting "object = [ "courseID" : {" + Object[courseID] + "}, ..." for each course like above
+			//pass the entire nested object of objects to javascript
+			//then to pull in the grades you need, you will use data=Object[courseID] as the data
+			
+			//pass the json 
+			$this->content->text .= '<script>';
+			$this->content->text .= $jsonGradesString;
+			$this->content->text .= 'allGrades["grades' . $course->id . '"] = grades' . $course->id . ';';
+			$this->content->text .= '</script>';
 		}
 
 		$this->content->text .= '<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>'; //SVG.js
