@@ -63,10 +63,6 @@ class block_gradeup extends block_base {
 			$courseStartDates[$course->id] = $course->startdate;
 			if ($course->id == 2) { //TODO: the "2" is just a placeholder until the user can select which course they want to display
 				$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
-
-				//$getCourseStartDate = "SELECT c.startdate FROM mdl_course c INNER JOIN mdl_enrol e ON c.id=e.courseid INNER JOIN mdl_user_enrolments ue ON e.id=ue.enrolid WHERE userid=5 AND courseid=2;";
-
-				
 				
 				//Get the total points in a course to calculate weights of assignments
 				$getTotalCoursePoints = "SELECT SUM(grade) as totalPoints FROM mdl_assign a WHERE a.course=". $course->id ."; ";
@@ -158,14 +154,20 @@ class block_gradeup extends block_base {
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/heatmap.js"></script>';
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/burnup.js"></script>';
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/valueChanged.js"></script>';
+		
+		//create drop down selection for courses
 		$this->content->text .= '<label for="cars">Which Course do you want to see?</label>';
 		$this->content->text .= 	'<select name="cars" id="courseSelection" onchange="valueChanged()">';
-		$this->content->text .= 	'<option value="2">Math</option>';
-		$this->content->text .= 	'<option value="4">English</option> <! the value is the course id?>';
+		foreach ($courses as $course) {
+			$this->content->text .= 	'<option value="' . $course->id . '">' . $course->fullname . '</option>'; // add an option for each course to be selected
+		}
 		$this->content->text .= '</select>';
+		
+		//user select scale option
 		$this->content->text .= 'Change the Scale: <input type="number" id="scaleSelection" name="scaleInput" value="500" min="100" max="1000" onchange="valueChanged()"><br><br>';
 		
 		$this->content->text .= '<div id="svgContainer"></div>';
+		//user slope selection
 		$this->content->text .= 'Change the Heatmap Slope: <input type="number" id="heatmapSelection" name="scaleInput" value="7" min="1" max="10" onchange="valueChanged()">';
 		$this->content->text .= '<h2 style="font-size:30px; color:green; text-align:left">Course Load Heatmap</h2>';
 		$this->content->text .= '<div id="svgContainer2"></div>';
