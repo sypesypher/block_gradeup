@@ -5,6 +5,7 @@
 	<script src="gradeupjs/heatmap.js"></script>
 	<script src="gradeupjs/grades2.js"></script>
 	<script src="gradeupjs/burnup.js"></script>
+	<script src="gradeupjs/valueChanged.js"></script>
   
 	<h2 style="font-size:30px; color:green; text-align:left">Gradeup</h2>
 	
@@ -18,6 +19,8 @@
 	 
 	<h2 style="font-size:30px; color:green; text-align:left">Grades Burnup</h2>
 	<div id="svgContainer"></div>
+
+	Change the Heatmap Slope: <input type="number" id="heatmapSelection" name="scaleInput" value="7" min="1" max="10" onchange="valueChanged()">
 	
 	<h2 style="font-size:30px; color:green; text-align:left">Course Load Heatmap</h2>
 	<div id="svgContainer2"></div>
@@ -28,26 +31,6 @@
 			pull out the string maker for the javascript and make into array for all courses etc...
 		*/
 		
-		//check if the user changed scale or selected a new course to see
-		function valueChanged() {
-			var e = document.getElementById("courseSelection");
-			var s = document.getElementById("scaleSelection");
-			console.log("new course: " + e.options[e.selectedIndex].value);
-			console.log("new scale: " + s.value);
-			
-			//redraw			
-			let scale = parseInt(s.value);
-			draw.size(scale+scale*2/3,scale+scale/6); //additional area for chart legend and assignment names
-			draw.clear();
-			drawChart(scale,draw);
-			drawAssignments(scale, draw,data);
-		
-			draw2.size(scale+scale*.66,scale/2);
-			draw2.clear();
-			drawHeatMap(scale,draw2,data,classStartDate);	
-		}
-		
-
         //Normally a call to get data, but this will do for an example
         function getData() {
             let data = grades;
@@ -70,11 +53,12 @@
 		
 		let data = getData();
 		let scale = 500;
+		let heatmapScale = 7; 
 		var draw = SVG().addTo('#svgContainer').size(scale + scale*2/3,scale+scale/6); 
 		drawChart(scale,draw);
 		drawAssignments(scale, draw,data);
 		classStartDate = 1588699454;
 		var draw2 = SVG().addTo('#svgContainer2').size(scale+scale*.66,scale/2);
-		drawHeatMap(scale,draw2,data,classStartDate);
+		drawHeatMap(scale,draw2,data,classStartDate,heatmapScale);
      </script>
 </html>

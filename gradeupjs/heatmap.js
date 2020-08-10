@@ -21,12 +21,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  
-function drawHeatMap(scale,svg,data,classStartDate) {
+function drawHeatMap(scale,svg,data,classStartDate,yScalePerWeight2) {
 	var draw = svg;
 	var fontsize = scale/25;
 	
 	//heatmap change variable constants
-	let yScalePerWeight2 = 7;
+	//let yScalePerWeight2 = 7;
 
 	
 	//draw the heatmap border

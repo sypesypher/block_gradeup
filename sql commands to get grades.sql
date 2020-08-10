@@ -11,9 +11,13 @@ SELECT * FROM mdl_assign;
 SELECT * FROM mdl_assign_grades;
 SELECT * FROM mdl_grade_items;
 SELECT * FROM mdl_grade_grades_history;
+SELECT * FROM mdl_course;
 
 /** get courses that a user is enrolled in*/
-SELECT c.id, c.fullname FROM mdl_course c INNER JOIN mdl_enrol e ON c.id=e.courseid INNER JOIN mdl_user_enrolments ue ON e.id=ue.enrolid WHERE userid=5 ORDER BY c.fullname;
+SELECT c.id, c.fullname, c.startdate FROM mdl_course c INNER JOIN mdl_enrol e ON c.id=e.courseid INNER JOIN mdl_user_enrolments ue ON e.id=ue.enrolid WHERE userid=5 ORDER BY c.fullname;
+
+/**get course startdate*/
+SELECT c.startdate FROM mdl_course c INNER JOIN mdl_enrol e ON c.id=e.courseid INNER JOIN mdl_user_enrolments ue ON e.id=ue.enrolid WHERE userid=5 AND courseid=2;
 
 /* returns the total points available in a course for use in computing assignment weight */
 SELECT SUM(grade) as totalPoints FROM mdl_assign a WHERE a.course=2; 
