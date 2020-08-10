@@ -58,6 +58,9 @@ class block_gradeup extends block_base {
 			$dropdownCourses;
 		}
 
+		$this->content->text .= '<script>';
+		$this->content->text .= 'let allGrades = {};';
+		$this->content->text .= '</script>';
 		foreach ($courses as $course) {
 			if ($course->id == 2) { //TODO: the "2" is just a placeholder until the user can select which course they want to display
 				$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
@@ -104,7 +107,7 @@ class block_gradeup extends block_base {
 				}
 				
 				//convert php grades objects array to a string (in JSON format) so it can be passed to the javascript, is there a better way? probably
-				$jsonGradesString = "let grades = [";
+				$jsonGradesString = "let grades" . $course->id . " = [";
 				foreach ($student_grades as $grade){
 					$jsonGradesString .= "{";
 					$jsonGradesString .= "itemname: \"" . $grade->itemname . "\",";
@@ -143,6 +146,7 @@ class block_gradeup extends block_base {
 				//pass the json 
 				$this->content->text .= '<script>';
 				$this->content->text .= $jsonGradesString;
+				$this->content->text .= 'allGrades["grades' . $course->id . '"] = grades' . $course->id . ';';
 				$this->content->text .= '</script>';
 			}
 		}
@@ -194,12 +198,13 @@ class block_gradeup extends block_base {
         $this->content->text .= 'let resetButtonString = \'' . get_string('resetButton', 'block_gradeup') . '\';';
         $this->content->text .= 'let heatMapString = \'' . get_string('heatmapLabel', 'block_gradeup') . '\';';
 
-        $this->content->text .= 'function getData() {'; //Normally a call to get data, but this will do for an example
-		$this->content->text .=     'let data = grades;';
+		$this->content->text .= 'function getData(courseid) {'; //Normally a call to get data, but this will do for an example
+		$this->content->text .=     'let gradeString = "grades" + courseid;';
+		$this->content->text .=     'let data = allGrades[gradeString];';
         $this->content->text .=     'return data;';
 		$this->content->text .= '};';
 		
-		$this->content->text .= 'let data = getData();';
+		$this->content->text .= 'let data = getData(2);';
 		$this->content->text .= 'var draw = SVG().addTo(\'#svgContainer\').size(700 + 700*2/3,700+700/6);'; //additional area for chart legend and assignment names
 		$this->content->text .= 'drawChart(700,draw);';
 		$this->content->text .= 'drawAssignments(700, draw,data);';

@@ -30,16 +30,17 @@ function valueChanged() {
 	console.log("new heatmap Slope/Scale: " + h.value);
 	
 	//redraw			
-	let data = getData();
+	let data = getData(e.options[e.selectedIndex].value);
 	let scale = parseInt(s.value);
 	let heatmapScale = parseInt(h.value);
-	let courseStartDate = courseStartDates[e.value];
+	let courseID = e.value;
+	let courseStartDate = courseStartDates[courseID];
 	draw.size(scale+scale*2/3,scale+scale/6); //additional area for chart legend and assignment names
 	draw.clear();
-	drawChart(scale,draw);
-	drawAssignments(scale, draw,data);
-
 	draw2.size(scale+scale*.66,scale/2);
 	draw2.clear();
+
+	drawChart(scale,draw);
+	drawAssignments(scale, draw,data);
 	drawHeatMap(scale,draw2,data,courseStartDate,heatmapScale);	
 }
