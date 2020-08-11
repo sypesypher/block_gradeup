@@ -220,18 +220,6 @@ function drawHeatMap(scale,svg,data,classStartDate,yScalePerWeight2) {
 	heatline.fill(gradient);
 	heatline.opacity(.5);
 	
-	/*
-	//find the highest weight of any date to set as the upper limit of the Y scale
-	let heaviestWeight = null;
-	for (let i =0; i < heatmapData2.length; i++) {
-		//console.log(key + " : " + heatmapData[key]);
-		if (heaviestWeight == null || heaviestWeight < heatmapData2[i].gradeweight) {
-			heaviestWeight = heatmapData2[i].gradeweight;
-		}
-	}
-	yScalePerWeight = (scale/3) / heaviestWeight;
-	*/
-	
 }
 
 function addPoint(x,y,draw,color='blue') {
