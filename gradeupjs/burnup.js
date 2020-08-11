@@ -21,6 +21,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  
+/**
+ * burnup.js
+ * This file contains all of the code needed to draw the burnup chart.
+ * 
+ */
+
  function drawAssignment(x, y, artifact, scale, draw) {
             let x1 = x;
             let y1 = y;

@@ -21,6 +21,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  
+/**
+ * heatmap.js
+ * This file contains all of the code needed to draw the heatmap.
+ * 
+ */
+
 function drawHeatMap(scale,svg,data,classStartDate,yScalePerWeight2) {
 	var draw = svg;
 	var fontsize = scale/25;

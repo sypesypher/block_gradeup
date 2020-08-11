@@ -1,4 +1,4 @@
- // This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,12 @@
  * @package   block_gradeup
  * @author    Chris Strothman	<cstrothman@southern.edu>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+ /**
+ * valueChanged.js
+ * This file is used by to refresh the plugin to reflect user changes such as scale/slope/course.
+ * 
  */
  
 function valueChanged() {

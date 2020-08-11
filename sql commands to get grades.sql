@@ -1,5 +1,30 @@
+/* This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /*
-This file is not used directly by gradeup - but the sql commands used within gradeup are contained in this file. 
+ * Gradeup Block.
+ *
+ * @package   block_gradeup
+ * @author    Chris Strothman	<cstrothman@southern.edu>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+ 
+ /*
+THIS IS A DEV RESOURCE FILE ONLY
+This file is not used by gradeup - but the sql commands used within gradeup are contained in this file. 
 use MySQL Workbench or any other database software to play around with moodle's tables and use the below to understand what is going on
 */
 
