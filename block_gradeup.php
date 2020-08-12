@@ -167,7 +167,7 @@ class block_gradeup extends block_base {
 		$this->content->text .= '<div id="svgContainer"></div>';
 
 		//user slope selection
-		$this->content->text .= 'Change the Heatmap Slope: <input type="number" id="heatmapSelection" name="scaleInput" value="4" min="1" max="10" onchange="valueChanged()">';
+		$this->content->text .= 'Change the Heatmap Class Difficulty: <input type="number" id="heatmapSelection" name="scaleInput" value="4" min="1" max="10" onchange="valueChanged()">';
 		$this->content->text .= '<h2 style="font-size:30px; color:green; text-align:left">Course Load Heatmap</h2>';
 		$this->content->text .= '<div id="svgContainer2"></div>';
 		
