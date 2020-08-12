@@ -184,7 +184,6 @@ class block_gradeup extends block_base {
 			$courseEndDates .= 'courseEndDates[' . $course->id . '] = ' . $course->enddate . ';';
 		}
 		$this->content->text .= $courseStartDates ;
-		print_r($courseEndDates);
 		$this->content->text .= $courseEndDates;
 
 
