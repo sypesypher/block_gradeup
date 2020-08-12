@@ -28,7 +28,7 @@ class block_gradeup extends block_base {
     private $jsloaded = false;
 
 	public function init() {
-		global $CFG, $USER, $DB, $USER;
+		global $CFG, $USER, $DB, $USER; //TODO checkif duplicate
 
         $this->title = get_string('gradeup', 'block_gradeup');
     }
@@ -45,24 +45,23 @@ class block_gradeup extends block_base {
 	 
 		$this->content       =  new stdClass;
 
-		//pull in grades: currently just grab file
-		//$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/grades.js"></script>';
-
 		//pull grades
-		$courses = enrol_get_users_courses($USER->id, true);
-		$this->content->text .= '<br>Your Courses: ';
+		$getCoursesString = "SELECT c.id, c.fullname, c.startdate,c.enddate FROM mdl_course c INNER JOIN mdl_enrol e ON c.id=e.courseid INNER JOIN mdl_user_enrolments ue ON e.id=ue.enrolid WHERE userid=5 ORDER BY c.fullname;";
+		$courses = $DB->get_records_sql($getCoursesString);
+
+
+		//$courses = enrol_get_users_courses($USER->id, true);
 
 		//user selects which course to pull data from
 		$dropdownCourses = [];
-		foreach ($courses as $course) {
-			$dropdownCourses;
-		}
+		//foreach ($courses as $course) {
+		//	$dropdownCourses;
+		//}
 
 		$this->content->text .= '<script>';
 		$this->content->text .= 'let allGrades = {};';
 		$this->content->text .= '</script>';
 		foreach ($courses as $course) {
-			$this->content->text .= $course->fullname . ': ' . $course->id . '<br>' ;
 			
 			//Get the total points in a course to calculate weights of assignments
 			$getTotalCoursePoints = "SELECT SUM(grade) as totalPoints FROM mdl_assign a WHERE a.course=". $course->id ."; ";
@@ -149,6 +148,7 @@ class block_gradeup extends block_base {
 			$this->content->text .= '</script>';
 		}
 
+		//required import statements
 		$this->content->text .= '<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>'; //SVG.js
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/heatmap.js"></script>';
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/burnup.js"></script>';
@@ -163,11 +163,11 @@ class block_gradeup extends block_base {
 		$this->content->text .= '</select>';
 		
 		//user select scale option
-		$this->content->text .= 'Change the Scale: <input type="number" id="scaleSelection" name="scaleInput" value="500" min="100" max="1000" onchange="valueChanged()"><br><br>';
-		
+		$this->content->text .= 'Change the Scale: <input type="number" id="scaleSelection" name="scaleInput" value="500" min="100" max="1000" onchange="valueChanged()"><br><br>';	
 		$this->content->text .= '<div id="svgContainer"></div>';
+
 		//user slope selection
-		$this->content->text .= 'Change the Heatmap Slope: <input type="number" id="heatmapSelection" name="scaleInput" value="7" min="1" max="10" onchange="valueChanged()">';
+		$this->content->text .= 'Change the Heatmap Slope: <input type="number" id="heatmapSelection" name="scaleInput" value="4" min="1" max="10" onchange="valueChanged()">';
 		$this->content->text .= '<h2 style="font-size:30px; color:green; text-align:left">Course Load Heatmap</h2>';
 		$this->content->text .= '<div id="svgContainer2"></div>';
 		
@@ -175,11 +175,17 @@ class block_gradeup extends block_base {
 		//Define all the needed String values reading from lang directory
 		$this->content->text .= '<script>';
 		
+		//var course
+
 		$courseStartDates = 'let courseStartDates = {};';
+		$courseEndDates = 'let courseEndDates = {};';
 		foreach ($courses as $course) {
 			$courseStartDates .= 'courseStartDates[' . $course->id . '] = ' . $course->startdate . ';';
+			$courseEndDates .= 'courseEndDates[' . $course->id . '] = ' . $course->enddate . ';';
 		}
 		$this->content->text .= $courseStartDates ;
+		print_r($courseEndDates);
+		$this->content->text .= $courseEndDates;
 
 
 		$this->content->text .= 'let promptString = \'' . get_string('promptString', 'block_gradeup') . '\';';
@@ -202,13 +208,13 @@ class block_gradeup extends block_base {
         $this->content->text .=     'return data;';
 		$this->content->text .= '};';
 		
-		$this->content->text .= 'let data = getData(2);';
+		//$this->content->text .= 'let data = getData(2);'; //this will break, fix it TODO
 		$this->content->text .= 'var draw = SVG().addTo(\'#svgContainer\').size(700 + 700*2/3,700+700/6);'; //additional area for chart legend and assignment names
-		$this->content->text .= 'drawChart(700,draw);';
-		$this->content->text .= 'drawAssignments(700, draw,data);';
+		//$this->content->text .= 'drawChart(700,draw);';
+		//$this->content->text .= 'drawAssignments(700, draw,data);';
 
 		$this->content->text .= 'var draw2 = SVG().addTo(\'#svgContainer2\').size(700+700*.66,700/2);';
-		$this->content->text .= 'drawHeatMap(700,draw2,data,1592052000,7);';
+		//$this->content->text .= 'drawHeatMap(700,draw2,data,1592052000,7);';
 		$this->content->text .= 'valueChanged();';
 		$this->content->text .= '</script>';
 

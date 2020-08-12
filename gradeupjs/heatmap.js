@@ -27,14 +27,10 @@
  * 
  */
 
-function drawHeatMap(scale,svg,data,classStartDate,yScalePerWeight2) {
+function drawHeatMap(scale,svg,data,classStartDate,classEndDate,yScalePerWeight2) {
 	var draw = svg;
 	var fontsize = scale/25;
-	
-	//heatmap change variable constants
-	//let yScalePerWeight2 = 7;
 
-	
 	//draw the heatmap border
 	borderx = scale*1.5;
 	bordery = scale/3;
@@ -44,28 +40,38 @@ function drawHeatMap(scale,svg,data,classStartDate,yScalePerWeight2) {
 
 	//find start and end dates of chart
 	var courseStartDate = new Date(classStartDate * 1000);
-	let courseStartDateObjectString = (courseStartDate.getMonth()+1) + '/' + courseStartDate.getDay() + '/' + courseStartDate.getFullYear();
-	drawTextHeatmap(-(scale/50),scale/3 + scale*.05, courseStartDateObjectString, scale/30, draw, 90);
-	var lastDueUnix = data[0].due;
-	for (let i=1; i<data.length; i++) {
-		if (data[i].due > lastDueUnix) {
-			lastDueUnix = data[i].due;
-			//console.log("assignment:" + data[i].itemname + " due at:" + data[i].due)
-		}
-	}
-	var lastDate = new Date(lastDueUnix * 1000); //https://www.epochconverter.com/ <- to understand what is happening
-	//calculate the scale for drawing using days between start of course and last assignment due
-	var differenceInDays = (lastDate.getTime() - courseStartDate.getTime()) / (1000 * 3600 * 24);
+	var courseEndDate = new Date(classEndDate * 1000);
+	let courseStartDateObjectString = (courseStartDate.getMonth()+1) + '/' + courseStartDate.getDate() + '/' + courseStartDate.getFullYear();
+	drawTextHeatmap(-(scale/50),scale/3 + scale*.08, courseStartDateObjectString, scale/30, draw, 90);
+	let courseEndDateObjectString = (courseEndDate.getMonth()+1) + '/' + courseEndDate.getDate() + '/' + courseEndDate.getFullYear();
+	drawTextHeatmap(scale*1.45,scale/3 + scale*.08, courseEndDateObjectString, scale/30, draw, 90);
+
+	var differenceInDays = (courseEndDate.getTime() - courseStartDate.getTime()) / (1000 * 3600 * 24);
 	let xScalePerDay = borderx/differenceInDays;
 	console.log("xScalePerDay: " + xScalePerDay);
 	console.log("difference in grades: " + differenceInDays)
+
+
+	let weekDayNumber =	courseStartDate.getDay();
+	var newDate = new Date(courseStartDate);
+	for (let i = 0; i < differenceInDays; i++) {
+		newDate.setDate(newDate.getDate() + 1);
+		if ((weekDayNumber + i) % 7 == 6) {
+			drawWeekLine(i*xScalePerDay,draw,scale);
+
+			let weekDateMarker = (newDate.getMonth()+1) + '/' + newDate.getDate();	
+			drawTextHeatmap((i*xScalePerDay)-scale*.01,scale*.02,weekDateMarker,scale/40,draw)
+		}
+	}
+
+
 	
 	//combine/filter grades that have the same due date together
 	var gradeLoads = [];
 	for (let i=0; i<data.length; i++) {
 		let duedate = new Date(data[i].due * 1000);
 		let daysTill = (duedate.getTime() - courseStartDate.getTime()) / (1000 * 3600 * 24);
-		let dateObject = (duedate.getMonth()+1) + '/' + (duedate.getDay()+1) + '/' + duedate.getFullYear()
+		let dateObject = (duedate.getMonth()+1) + '/' + (duedate.getDate()+1) + '/' + duedate.getFullYear()
 		let assignment = {};
 		assignment.duedate = dateObject;
 		assignment.gradeweight = data[i].weight;
@@ -107,10 +113,15 @@ function drawHeatMap(scale,svg,data,classStartDate,yScalePerWeight2) {
 	drawTextHeatmap(scale*1.52, (scale/3) - (30 * yScalePerWeight2), "30%",scale/30, draw);
 	drawTextHeatmap(scale*1.52, (scale/3) - (40 * yScalePerWeight2), "40%",scale/30, draw);
 	drawTextHeatmap(scale*1.52, (scale/3) - (50 * yScalePerWeight2), "50%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3) - (60 * yScalePerWeight2), "60%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3) - (70 * yScalePerWeight2), "70%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3) - (80 * yScalePerWeight2), "80%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3) - (90 * yScalePerWeight2), "90%",scale/30, draw);
+	drawTextHeatmap(scale*1.52, (scale/3) - (100 * yScalePerWeight2), "100%",scale/30, draw);
 	
 	drawTextHeatmap(scale*1.52, (scale/3 -scale*.03), "0%",scale/30, draw);
-	drawTextHeatmap(scale*1.51, scale*.13, "Percent of Grade", scale/25, draw, 90);
-	drawTextHeatmap(scale*.7, scale/3+scale*.12, "Due Date", scale/25, draw);
+	drawTextHeatmap(scale*1.52, scale*.13, "Percent of Grade", scale/25, draw, 90);
+	drawTextHeatmap(scale*.7, scale/2+scale*.03, "Due Date", scale/25, draw);
 
 	//get all plot Points (start and end) for each due date set
 	let ypoints = [];
@@ -121,7 +132,7 @@ function drawHeatMap(scale,svg,data,classStartDate,yScalePerWeight2) {
 		let y = (scale/3) - (heatmapData2[i].gradeweight * yScalePerWeight2);
 		
 		//plotPoint(x,y,draw);
-		drawTextHeatmap(x-scale*.03,scale/3 + scale*.05, heatmapData2[i].duedate, scale/30, draw, 90);
+		drawTextHeatmap(x-scale*.03,scale/3 + scale*.08, heatmapData2[i].duedate, scale/30, draw, 90);
 		
 		let endPoint = {};
 		endPoint.x = Math.floor(x);
@@ -233,7 +244,7 @@ function plotPoint(x, y, draw,color='blue') {
 	point.y(y);
 	point.fill(color);
 	point.mouseover(function() {
-		//use this to add functionality later - maybe show what assignments are due on each date
+		//TODO: use this to add functionality later - maybe show what assignments are due on each date
 		point.fill('grey');
 	});
 
@@ -256,3 +267,6 @@ function drawTextHeatmap(x,y,message,fontsize,draw,rotation=0){
 	})
 }
 
+function drawWeekLine(x,draw,scale) {
+	var line = draw.line([[x,0] , [x, scale*.025]]).stroke({ color: '#3399ff', width: 1, linecap: 'round' });
+}

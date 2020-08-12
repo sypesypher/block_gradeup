@@ -41,12 +41,13 @@ function valueChanged() {
 	let heatmapScale = parseInt(h.value);
 	let courseID = e.value;
 	let courseStartDate = courseStartDates[courseID];
+	let courseEndDate = courseEndDates[courseID];
 	draw.size(scale*2,scale+scale/6); //additional area for chart legend and assignment names
 	draw.clear();
-	draw2.size(scale+scale*.66,scale/2);
+	draw2.size(scale+scale*.66,scale/2+scale*.1);
 	draw2.clear();
 
 	drawChart(scale,draw);
 	drawAssignments(scale, draw,data);
-	drawHeatMap(scale,draw2,data,courseStartDate,heatmapScale);	
+	drawHeatMap(scale,draw2,data,courseStartDate,courseEndDate,heatmapScale);	
 }

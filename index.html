@@ -21,7 +21,7 @@
 	<h2 style="font-size:30px; color:green; text-align:left">Grades Burnup</h2>
 	<div id="svgContainer"></div>
 
-	Change the Heatmap Slope: <input type="number" id="heatmapSelection" name="scaleInput" value="7" min="1" max="10" onchange="valueChanged()">
+	Change the Heatmap Slope: <input type="number" id="heatmapSelection" name="scaleInput" value="6" min="1" max="10" onchange="valueChanged()">
 	
 	<h2 style="font-size:30px; color:green; text-align:left">Course Load Heatmap</h2>
 	<div id="svgContainer2"></div>
@@ -53,13 +53,14 @@
         let heatMapString = "Heatmap Chart";
 		
 		let data = getData();
-		let scale = 500;
-		let heatmapScale = 7; 
+		let scale = 800;
+		let heatmapScale = 6; 
 		var draw = SVG().addTo('#svgContainer').size(scale + scale*2/3,scale+scale/6); 
 		drawChart(scale,draw);
 		drawAssignments(scale, draw,data);
 		classStartDate = 1588699454;
+		classEndDate =   1607722197;
 		var draw2 = SVG().addTo('#svgContainer2').size(scale+scale*.66,scale/2);
-		drawHeatMap(scale,draw2,data,classStartDate,heatmapScale);
+		drawHeatMap(scale,draw2,data,classStartDate,classEndDate,heatmapScale);
      </script>
 </html>
