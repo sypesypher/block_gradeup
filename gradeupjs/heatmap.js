@@ -268,5 +268,5 @@ function drawTextHeatmap(x,y,message,fontsize,draw,rotation=0){
 }
 
 function drawWeekLine(x,draw,scale) {
-	var line = draw.line([[x,0] , [x, scale*.025]]).stroke({ color: '#3399ff', width: 1, linecap: 'round' });
+	var line = draw.line([[x,0] , [x, scale*.02]]).stroke({ color: '#3399ff', width: 1, linecap: 'round' });
 }
