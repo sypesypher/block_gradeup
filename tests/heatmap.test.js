@@ -13,3 +13,8 @@ test('sums values in an array', () => {
     console.log(typeof arraySum1);
     expect(arraySum1).toBe(10);
 })*/
+
+//test drawHeatmap
+//test plotPoint
+//test drawTextheatmap
+
