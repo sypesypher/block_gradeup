@@ -51,7 +51,7 @@ function drawHeatMap(scale,svg,data,classStartDate,classEndDate,yScalePerWeight2
 	console.log("xScalePerDay: " + xScalePerDay);
 	console.log("difference in grades: " + differenceInDays)
 
-
+	//mark weekly markers
 	let weekDayNumber =	courseStartDate.getDay();
 	var newDate = new Date(courseStartDate);
 	for (let i = 0; i < differenceInDays; i++) {
@@ -64,6 +64,11 @@ function drawHeatMap(scale,svg,data,classStartDate,classEndDate,yScalePerWeight2
 		}
 	}
 
+
+	//Draw today's date
+	var todayDate = new Date();
+	var daysTillToday = (todayDate.getTime() - courseStartDate.getTime()) / (1000 * 3600 * 24);
+	var todayLine = draw.line(xScalePerDay * daysTillToday, scale/3, xScalePerDay*daysTillToday, 0).stroke({ color: 'black', width: 2, linecap: 'round' });
 
 	
 	//combine/filter grades that have the same due date together

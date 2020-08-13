@@ -43,20 +43,14 @@ class block_gradeup extends block_base {
 		  return $this->content;
 		}
 	 
-		$this->content       =  new stdClass;
+		$this->content = new stdClass;
 
 		//pull grades
 		$getCoursesString = "SELECT c.id, c.fullname, c.startdate,c.enddate FROM mdl_course c INNER JOIN mdl_enrol e ON c.id=e.courseid INNER JOIN mdl_user_enrolments ue ON e.id=ue.enrolid WHERE userid=5 ORDER BY c.fullname;";
 		$courses = $DB->get_records_sql($getCoursesString);
 
-
-		//$courses = enrol_get_users_courses($USER->id, true);
-
 		//user selects which course to pull data from
 		$dropdownCourses = [];
-		//foreach ($courses as $course) {
-		//	$dropdownCourses;
-		//}
 
 		$this->content->text .= '<script>';
 		$this->content->text .= 'let allGrades = {};';
@@ -133,14 +127,6 @@ class block_gradeup extends block_base {
 			$jsonGradesString = rtrim($jsonGradesString, ","); //remove the comma after the last grade
 			$jsonGradesString .= "];";
 			
-			//TODO: instead of passing the string below,
-			//modify so that instead of "grades = {....." it's "courseID = {...."
-			// 		assign an object[key= courseid] = jsonGradeString
-			//then at end of loop, OBJECT will contain the json string for each class
-			//stringify the object by setting "object = [ "courseID" : {" + Object[courseID] + "}, ..." for each course like above
-			//pass the entire nested object of objects to javascript
-			//then to pull in the grades you need, you will use data=Object[courseID] as the data
-			
 			//pass the json 
 			$this->content->text .= '<script>';
 			$this->content->text .= $jsonGradesString;
@@ -207,13 +193,11 @@ class block_gradeup extends block_base {
         $this->content->text .=     'return data;';
 		$this->content->text .= '};';
 		
-		//$this->content->text .= 'let data = getData(2);'; //this will break, fix it TODO
+		
 		$this->content->text .= 'var draw = SVG().addTo(\'#svgContainer\').size(700 + 700*2/3,700+700/6);'; //additional area for chart legend and assignment names
-		//$this->content->text .= 'drawChart(700,draw);';
-		//$this->content->text .= 'drawAssignments(700, draw,data);';
-
+		
 		$this->content->text .= 'var draw2 = SVG().addTo(\'#svgContainer2\').size(700+700*.66,700/2);';
-		//$this->content->text .= 'drawHeatMap(700,draw2,data,1592052000,7);';
+		
 		$this->content->text .= 'valueChanged();';
 		$this->content->text .= '</script>';
 
