@@ -27,7 +27,7 @@
  * 
  */
  
-function valueChanged() {
+function valueChanged(refreshdata=true) {
 	var e = document.getElementById("courseSelection");
 	var s = document.getElementById("scaleSelection");
 	var h = document.getElementById("heatmapSelection");
@@ -35,8 +35,8 @@ function valueChanged() {
 	console.log("new scale: " + s.value);
 	console.log("new heatmap Slope/Scale: " + h.value);
 	
-	//redraw			
-	let data = getData(e.options[e.selectedIndex].value);
+	//redraw
+	let data = getData(e.options[e.selectedIndex].value);		
 	let scale = parseInt(s.value);
 	let heatmapScale = parseInt(h.value);
 	let courseID = e.value;
@@ -47,7 +47,7 @@ function valueChanged() {
 	draw2.size(scale+scale*.66,scale/2+scale*.1);
 	draw2.clear();
 
-	drawChart(scale,draw);
+	drawChart(scale,draw,data);
 	drawAssignments(scale, draw,data);
 	drawHeatMap(scale,draw2,data,courseStartDate,courseEndDate,heatmapScale);	
 }

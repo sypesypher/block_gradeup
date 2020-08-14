@@ -36,9 +36,9 @@ let grades = [
 	averageScore: 0.8,
 	due: 1592352000
 	},
-	{itemname: "Hw2",weight: 5,score: 0.7,originalScore: 0.7,averageScore: 0.8,due: 1592352000
+	{itemname: "Hw2",weight: 7.3333333,score: 0.7,originalScore: 0.7,averageScore: 0.8,due: 1592352000
 	},
-	{itemname: "Exam2",weight: 20,score: 0.7,originalScore: 0.7,averageScore: 0.8,due: 1595808000
+	{itemname: "Exam2",weight: 17.666666,score: 0.7,originalScore: 0.7,averageScore: 0.85465,due: 1595808000
 	},
 	{itemname: "Hw3",weight: 5,score: 0.7,originalScore: 0.7,averageScore: 0.8,due: 1597536000
 	},

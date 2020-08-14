@@ -5,14 +5,18 @@ User Tests:
 
 3) Create three new users: student1, student2, teacher
 	a) go to Site Administration -> Settings -> Users > Accounts and select "Add new users" (editing must be turned on in the settings section for this to work)
-	b) on the Add new user page, fill out the required fields, once done select update profile (make sure you set a user password as you will be logging in and out of these accounts for the tests
+	b) on the Add new user page, fill out the required fields, once done select create user (make sure you set a user password as you will be logging in and out of these accounts for the tests
 4) Create 2 new courses:
 	a) go to Site Administration -> Courses -> Add a new courses
-	b) enter a full and short name (Mathematics and Math) and click save and display
+	b) enter a full and short name (Mathematics and Math) and 
+		set the start to:  August 8, 2020
+		set the end date to: December 25, 2020
+		click save and display
 	c) Now select ""enrol Users" find the admin account and add it as a manager to each of your courses
 	d) select the two student accounts and add them as students
 	e) select the teacher account and add as a teacher
 5) now let's add some assignments to the course:
+	Go to the homepage of the course
 	a) as either the admin or teacher account, select "add an activity or resource (with editing turned on of course)"
 	b) you can name it however you want, just ensure that you select a due date and how many points the assignment should have
 	c) add several different assignments with different point amounts

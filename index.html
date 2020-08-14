@@ -55,7 +55,7 @@
 		let data = getData();
 		let scale = 800;
 		let heatmapScale = 6; 
-		var draw = SVG().addTo('#svgContainer').size(scale + scale*2/3,scale+scale/6); 
+		var draw = SVG().addTo('#svgContainer').size(scale *2,scale+scale/6); 
 		drawChart(scale,draw);
 		drawAssignments(scale, draw,data);
 		classStartDate = 1588699454;
