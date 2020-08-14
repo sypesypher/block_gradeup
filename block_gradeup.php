@@ -141,7 +141,7 @@ class block_gradeup extends block_base {
 		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/valueChanged.js"></script>';
 		
 		//create drop down selection for courses
-		$this->content->text .= '<label for="cars">Which Course do you want to see?</label>';
+		$this->content->text .= '<label for="cars">' . get_string('courseSelection', 'block_gradeup') . '</label>';
 		$this->content->text .= 	'<select name="cars" id="courseSelection" onchange="valueChanged()">';
 		foreach ($courses as $course) {
 			$this->content->text .= 	'<option value="' . $course->id . '">' . $course->fullname . '</option>'; // add an option for each course to be selected
@@ -149,12 +149,12 @@ class block_gradeup extends block_base {
 		$this->content->text .= '</select>';
 		
 		//user select scale option
-		$this->content->text .= 'Change the Scale: <input type="number" id="scaleSelection" name="scaleInput" value="500" min="100" max="1000" onchange="valueChanged()"><br><br>';	
+		$this->content->text .= get_string('scaleSelection', 'block_gradeup') . '<input type="number" id="scaleSelection" name="scaleInput" value="500" min="100" max="1000" onchange="valueChanged()"><br><br>';	
 		$this->content->text .= '<div id="svgContainer"></div>';
 
 		//user slope selection
-		$this->content->text .= 'Change the Heatmap Class Difficulty: <input type="number" id="heatmapSelection" name="scaleInput" value="4" min="1" max="10" onchange="valueChanged()">';
-		$this->content->text .= '<h2 style="font-size:30px; color:green; text-align:left">Course Load Heatmap</h2>';
+		$this->content->text .= get_string('difficultySelection', 'block_gradeup') . ' <input type="number" id="heatmapSelection" name="scaleInput" value="4" min="1" max="10" onchange="valueChanged()">';
+		$this->content->text .= '<h2 style="font-size:30px; color:green; text-align:left">' . get_string('heatmapLabel', 'block_gradeup') . '</h2>';
 		$this->content->text .= '<div id="svgContainer2"></div>';
 		
 		
