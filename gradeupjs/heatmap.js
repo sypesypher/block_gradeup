@@ -239,7 +239,7 @@ function drawHeatMap(scale,svg,data,classStartDate,classEndDate,yScalePerWeight2
 }
 
 function addPoint(x,y,draw,color='blue') {
-	plotPoint(x,y,draw,color=color)
+	//plotPoint(x,y,draw,color=color)
 	return x + "," + y + " ";
 }
 

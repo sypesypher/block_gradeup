@@ -80,7 +80,8 @@
 			});
 
             draw.line(x1 + (x2-x1)/2 ,scale,x1 + (x2-x1)/2,scale+10).stroke({color: 'blue', width: 1, linecap: 'round'})
-            var title = draw.text(data[index].itemname);
+			var title = draw.text(data[index].itemname);
+			title.addClass("gradeStuff");
 			title.x(x1 + (x2-x1)/4);
             title.y(scale+20);
             title.rotate(40);
@@ -182,6 +183,7 @@ function drawAverageGrades(x, y, artifact, scale, draw) {
 	let lineString = `${x1},${scale} ${x1},${y1} ${x2},${y2} ${x2},${scale}`;
 	if (artifact.averageScore != null) {
 		let p = draw.polygon(lineString);
+		p.addClass("gradeStuff");
 		p.stroke({color: 'darkblue', width: 1});
 		p.fill('lightblue');
 		p.opacity(.5);
