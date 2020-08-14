@@ -17,6 +17,7 @@ User Tests:
 	e) select the teacher account and add as a teacher
 5) now let's add some assignments to the course:
 	Go to the homepage of the course
+	Turn editing on
 	a) as either the admin or teacher account, select "add an activity or resource (with editing turned on of course)"
 	b) you can name it however you want, just ensure that you select a due date and how many points the assignment should have
 	c) add several different assignments with different point amounts
