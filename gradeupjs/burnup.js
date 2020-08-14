@@ -43,7 +43,7 @@
 				console.log("onclick drawassignment");
 				
 				var grade = prompt(promptString, "%");
-				if (grade == null || grade == "") {
+				if (grade == null || grade == "" || isNaN(grade)) {
 					console.log("User abandoned what-if");
 				} else {
 					let whatif = Number(grade);
@@ -189,10 +189,11 @@ function drawAverageGrades(x, y, artifact, scale, draw) {
 		p.opacity(.5);
 		p.click(function() {
 			console.log("onclick drawAverageGrades");
-			var grade = prompt(promptString);
-			if (grade == null || grade == "") {
-				console.log("User abandoned what-if");
+			var grade = prompt(promptString, '%');
+			if (grade == null || grade == "" || isNaN(grade)) {
+				console.log("User abandoned what-if/didn't enter a valid number");
 			} else {
+				console.log("user entered: " + grade);
 				let whatif = Number(grade);
 				if (whatif > 1) {
 					whatif = whatif/100; //convert to a decimal
