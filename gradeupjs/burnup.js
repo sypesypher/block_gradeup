@@ -52,8 +52,12 @@
 					}
 					
 					data[index].score =  whatif;
-					var list = SVG.find('.gradeStuff')
+					var list = SVG.find('.gradeStuff');
 					list.remove();
+					var list2 = SVG.find('.projectionStuff');
+					list2.remove();
+					var list3 = SVG.find('.temp')
+					list3.remove();
 					drawAssignments(scale,draw,data);
 				}
             });
@@ -62,9 +66,9 @@
 				list.remove();
 				
 				p.fill('grey');
-				let grade = (data[index].score).toPrecision(3);
+				let grade = (data[index].score);
 				let weight = (data[index].weight).toPrecision(3);
-				let average = (data[index].averageScore).toPrecision(3);
+				let average = (data[index].averageScore);
 				text = draw.text(gradeString + ": " + grade*100 +"%, "+  weightString + ": " + weight + "%, "+ averageString + ": " + average*100 + "%");
 				text.x(scale*1.1);
 				text.y(0);
@@ -175,13 +179,13 @@ function drawPrediction(x, y, data, scale, draw, percentage) { //This could prob
 	}
 }
 
-function drawAverageGrades(x, y, artifact, scale, draw) {
+function drawAverageGrades(x, y, data, scale, draw,index) {
 	let x1 = x;
 	let y1 = y;
-	let x2 = x1 + (artifact.weight * scale/100);
-	let y2 = y1 - (artifact.averageScore * artifact.weight)*scale/100;
+	let x2 = x1 + (data[index].weight * scale/100);
+	let y2 = y1 - (data[index].averageScore * data[index].weight)*scale/100;
 	let lineString = `${x1},${scale} ${x1},${y1} ${x2},${y2} ${x2},${scale}`;
-	if (artifact.averageScore != null) {
+	if (data[index].averageScore != null) {
 		let p = draw.polygon(lineString);
 		p.addClass("gradeStuff");
 		p.stroke({color: 'darkblue', width: 1});
@@ -199,9 +203,13 @@ function drawAverageGrades(x, y, artifact, scale, draw) {
 					whatif = whatif/100; //convert to a decimal
 				}
 				
-				artifact.score =  whatif;
-				var list = SVG.find('.gradeStuff')
+				data[index].score =  whatif;
+				var list = SVG.find('.gradeStuff');
 				list.remove();
+				var list2 = SVG.find('.projectionStuff');
+				list2.remove();
+				var list3 = SVG.find('.temp')
+				list3.remove();
 				drawAssignments(scale, draw,data);
 			}
 			});
@@ -210,9 +218,9 @@ function drawAverageGrades(x, y, artifact, scale, draw) {
 			list.remove();
 			
 			p.fill('grey');
-			let grade = (artifact.score).toPrecision(3);
-			let weight = (artifact.weight).toPrecision(3);
-			let average = (artifact.averageScore).toPrecision(3);
+			let grade = (data[index].score);
+			let weight = (data[index].weight).toPrecision(3);
+			let average = (data[index].averageScore);
 			text = draw.text(gradeString + ": " + grade*100 +"%, "+  weightString + ": " + weight + "%, "+ averageString + ": " + average*100 + "%");
 			text.x(scale*1.1);
 			text.y(0);
@@ -283,7 +291,7 @@ function drawAssignments(scale, draw, data){
 	let averageX = 0;
 	let averageY = scale;
 	for (let i=0; i<data.length; i++) {
-		let {xs, ys} = drawAverageGrades(averageX, averageY, data[i], scale, draw);
+		let {xs, ys} = drawAverageGrades(averageX, averageY, data, scale, draw,i);
 		averageX=xs;
 		averageY=ys;
 	}

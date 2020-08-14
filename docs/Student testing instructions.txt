@@ -23,8 +23,8 @@ User Tests:
 6) now log in as the teacher account and grade some of the assignments:
 	a) first go to the course page (math etc..)
 	b) select the assignment you want to grade
-	c) below the summary, click "View/grade all submissions"
-	d) click on the "grade" button tyo show the grading page and grade the assignments
+	c) below the summary, click "View all submissions"
+	d) click on the "grade" button to show the grading page and grade the assignments
 	e)NOTE: leave the last 2 assignments due ungraded to show the grade projection for ungraded assignments
 7) check that gradeup works! :)
 	a) log in as one of the student accounts
