@@ -1,38 +1,7 @@
 User Tests:
 
-1) Download and install Moodle using the Moodle installation guide in the docs directory
-2) Download and install Gradeup using the Gradeup installation/plugin guide
-
-3) Create three new users: student1, student2, teacher
-	a) go to Site Administration -> Settings -> Users > Accounts and select "Add new users" (editing must be turned on in the settings section for this to work)
-	b) on the Add new user page, fill out the required fields, once done select create user (make sure you set a user password as you will be logging in and out of these accounts for the tests
-4) Create 2 new courses:
-	a) go to Site Administration -> Courses -> Add a new courses
-	b) enter a full and short name (Mathematics and Math) and 
-		set the start to:  August 8, 2020
-		set the end date to: December 25, 2020
-		click save and display
-	c) Now select ""enrol Users" find the admin account and add it as a manager to each of your courses
-	d) select the two student accounts and add them as students
-	e) select the teacher account and add as a teacher
-5) now let's add some assignments to the course:
-	Go to the homepage of the course
-	Turn editing on
-	a) as either the admin or teacher account, select "add an activity or resource (with editing turned on of course)"
-	b) you can name it however you want, just ensure that you select a due date and how many points the assignment should have
-	c) add several different assignments with different point amounts
-6) now log in as the teacher account and grade some of the assignments:
-	a) first go to the course page (math etc..)
-	b) select the assignment you want to grade
-	c) below the summary, click "View all submissions"
-	d) click on the "grade" button to show the grading page and grade the assignments
-	e)NOTE: leave the last 2 assignments due ungraded to show the grade projection for ungraded assignments
-7) check that gradeup works! :)
-	a) log in as one of the student accounts
-	b) select "Turn editing on" at the upper right of the page
-	c) on the left hand side of the page, a "add a block" button should appear, click on it
-	d) scroll down or up until you find "gradeup" as an option and select it
-	e) gradeup should now appear and show your grades for the course, you can move it to the center of the page using the arrows-going-in-all-directions icon and draging
-	f) if you want/need to change the size of the entire thing, change the "scale" operator, if the heatmap is showing too steep or too slowly, change the slope using the drop down
-8) please complete the usability survey
+1) Download and install Moodle using the "Moodle Developer Environment Setup Guide" in the docs directory
+2) Download and install Gradeup using the "Install Gradeup or other blocks into your moodle" in the docs directory
+3) Follow the instructions in the "Setup Moodle Course Environment" in the docs directory
+4) please complete the "Tester Survey" in the docs directory and send it back to me
 	
