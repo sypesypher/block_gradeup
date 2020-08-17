@@ -1,5 +1,5 @@
 # Moodle Developer Environment Setup Guide
-Moodle is normally run on a server setup, however, for plugin developers, it is probably easier to run Moodle standalone on their personal computer. This guide assumes you will be using a Windows machine.
+Moodle is normally run on a server setup, however, for plugin developers, it is probably easier to run Moodle standalone on their personal computer. This guide assumes you will be using a Windows machine. NOTE: some of these steps may be out of order depending on which moodle version you install.
 
 1.	__To install Moodle for desktop, go to https://download.moodle.org/windows/ and download the version of Moodle you would like to use (probably the latest version)__
 ![](./imgs/1/1-1.png)
