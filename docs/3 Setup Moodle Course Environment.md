@@ -82,4 +82,4 @@
 	11. if you want/need to change the size of the entire thing, change the "scale" operator, if the heatmap is showing too steep or too slowly, change the slope using the drop down
    
 	12. If you filled out the grades as above it should look like (or close to it): (now feel free to play around with gradeup and fill out the Tester Survey  
-    ![](.\imgs\3\3-5-7.png)
+    ![](./imgs/3/3-5-7.png)
