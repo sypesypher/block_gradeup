@@ -329,9 +329,10 @@ function drawChart(scale, svg,data){
 	let buttonx = 0;
 	let buttony = scale/3 + scale/25;
 	
-	
+	drawText(buttonx+ scale*.01,buttony-scale*.01, resetButtonString, scale/25, draw);
 	let button = draw.polygon([[0,buttony] , [scale/5, buttony], [scale/5, buttony + scale /15], [ 0, buttony + scale /15]]);
 	button.fill('lightblue');
+	button.opacity(.5);
 	button.click(function() {
 			console.log("onclick reset button");
 			for (let i=0; i<data.length; i++) {
@@ -348,7 +349,7 @@ function drawChart(scale, svg,data){
 	button.mouseout(function() {
 		button.fill('lightblue');
 	});
-	drawText(buttonx+ scale*.01,buttony-scale*.05, resetButtonString, scale/25, draw);
+	
 	
 	
 	
