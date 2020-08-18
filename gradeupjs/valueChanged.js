@@ -46,9 +46,8 @@ function valueChanged(showAll=true) {
 	draw.clear();
 	draw2.size(scale+scale*.66,scale/2+scale*.1);
 	draw2.clear();
-
-	drawChart(scale,draw,data);
 	let isAStudent = isStudent();
+	drawChart(scale,draw,data,isAStudent);
 	drawAssignments(scale, draw,data,isAStudent);
 	drawHeatMap(scale,draw2,data,courseStartDate,courseEndDate,heatmapScale);	
 }

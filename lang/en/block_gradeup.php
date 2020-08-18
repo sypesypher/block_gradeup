@@ -44,3 +44,5 @@ $string['userid'] = 'User ID';
 $string['courseSelection'] = 'Which Course do you want to see?';
 $string['scaleSelection'] = 'Change the Scale:';
 $string['difficultySelection'] = 'Change the Heatmap Class Difficulty:';
+$string['percentOfGradeString'] = 'Percent of Grade';
+$string['dueDateString'] = 'Due Date';

@@ -214,28 +214,33 @@ function drawAverageGrades(x, y, data, scale, draw,index,showAll) {
 					drawAssignments(scale, draw,data);
 				}
 				});
-			p.mouseover(function() {
-				var list = SVG.find('.projectionText')
-				list.remove();
-				
-				p.fill('grey');
-				let grade = (data[index].score);
-				let weight = (data[index].weight).toPrecision(3);
-				let average = (data[index].averageScore);
-				text = draw.text(gradeString + ": " + grade*100 +"%, "+  weightString + ": " + weight + "%, "+ averageString + ": " + average*100 + "%");
-				text.x(scale*1.1);
-				text.y(0);
-				text.addClass('temp');
-				text.font({
-					size: scale/25
-				})
-			});
-			p.mouseout(function() {
-				p.fill('lightblue');
-				var list = SVG.find('.temp')
-				list.remove();
-			});
 		}
+		p.mouseover(function() {
+			var list = SVG.find('.projectionText')
+			list.remove();
+			
+			p.fill('grey');
+			let grade = (data[index].score);
+			let weight = (data[index].weight).toPrecision(3);
+			let average = (data[index].averageScore);
+			if (showAll){
+				text = draw.text(gradeString + ": " + grade*100 +"%, "+  weightString + ": " + weight + "%, "+ averageString + ": " + average*100 + "%");
+			} else {
+				text = draw.text(weightString + ": " + weight + "%, "+ averageString + ": " + average*100 + "%");
+			}
+			text.x(scale*1.1);
+			text.y(0);
+			text.addClass('temp');
+			text.font({
+				size: scale/25
+			})
+		});
+		p.mouseout(function() {
+			p.fill('lightblue');
+			var list = SVG.find('.temp')
+			list.remove();
+		});
+		
 		
 	}
 	
@@ -325,38 +330,38 @@ function drawAssignments(scale, draw, data,showAll=true){
 	
 	
 }
-function drawChart(scale, svg,data){
+function drawChart(scale, svg,data,showAll=true){
 	var draw = svg;
 	var scale = scale;
 	
 	//draw the legend for the chart
 	drawLegend(scale,draw,scale/25); //fontsize == 20
 	
-	let buttonx = 0;
-	let buttony = scale/3 + scale/25;
-	
-	drawText(buttonx+ scale*.01,buttony-scale*.01, resetButtonString, scale/25, draw);
-	let button = draw.polygon([[0,buttony] , [scale/5, buttony], [scale/5, buttony + scale /15], [ 0, buttony + scale /15]]);
-	button.fill('lightblue');
-	button.opacity(.5);
-	button.click(function() {
-			console.log("onclick reset button");
-			for (let i=0; i<data.length; i++) {
-				data[i].score = data[i].originalScore;
-			}
-			var list = SVG.find('.gradeStuff')
-			list.remove();
-			drawAssignments(scale, draw,data);
-			
-		});
-	button.mouseover(function() {
-		button.fill('grey');
-	});
-	button.mouseout(function() {
+	if (showAll){
+		let buttonx = 0;
+		let buttony = scale/3 + scale/25;
+		
+		drawText(buttonx+ scale*.01,buttony-scale*.01, resetButtonString, scale/25, draw);
+		let button = draw.polygon([[0,buttony] , [scale/5, buttony], [scale/5, buttony + scale /15], [ 0, buttony + scale /15]]);
 		button.fill('lightblue');
-	});
-	
-	
+		button.opacity(.5);
+		button.click(function() {
+				console.log("onclick reset button");
+				for (let i=0; i<data.length; i++) {
+					data[i].score = data[i].originalScore;
+				}
+				var list = SVG.find('.gradeStuff')
+				list.remove();
+				drawAssignments(scale, draw,data);
+				
+			});
+		button.mouseover(function() {
+			button.fill('grey');
+		});
+		button.mouseout(function() {
+			button.fill('lightblue');
+		});
+	}
 	
 	
 	var border = draw.polyline(`0,${scale} ${scale},${scale} ${scale},0 0,${scale}`);

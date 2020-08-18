@@ -125,8 +125,8 @@ function drawHeatMap(scale,svg,data,classStartDate,classEndDate,yScalePerWeight2
 	drawTextHeatmap(scale*1.52, (scale/3) - (100 * yScalePerWeight2), "100%",scale/30, draw);
 	
 	drawTextHeatmap(scale*1.52, (scale/3 -scale*.03), "0%",scale/30, draw);
-	drawTextHeatmap(scale*1.52, scale*.13, "Percent of Grade", scale/25, draw, 90);
-	drawTextHeatmap(scale*.7, scale/2+scale*.03, "Due Date", scale/25, draw);
+	drawTextHeatmap(scale*1.52, scale*.13, percentOfGradeString, scale/25, draw, 90);
+	drawTextHeatmap(scale*.7, scale/2+scale*.03, dueDateString, scale/25, draw);
 
 	//get all plot Points (start and end) for each due date set
 	let ypoints = [];
