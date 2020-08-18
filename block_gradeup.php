@@ -214,18 +214,21 @@ class block_gradeup extends block_base {
         $this->content->text .=     'return data;';
 		$this->content->text .= '};';
 		
-		
+		$this->content->text .= 'function isStudent() {'; //this is for teachers and admins so they can see average grades
+		if ($userRole != 5) {
+			$this->content->text .= 'return false;'; //don't show grades, just averages
+		} else {
+			$this->content->text .= 'return true;';
+		}
+		$this->content->text .= '};';
+
+
 		$this->content->text .= 'var draw = SVG().addTo(\'#svgContainer\').size(700 + 700*2/3,700+700/6);'; //additional area for chart legend and assignment names
 		
 		$this->content->text .= 'var draw2 = SVG().addTo(\'#svgContainer2\').size(700+700*.66,700/2);';
 		
-		//this is for teachers and admins so they can see average grades
-		if ($userRole != 5) {
-			$this->content->text .= 'valueChanged(false);'; //don't show grades, just averages
-		} else {
-			$this->content->text .= 'valueChanged();';
-		}
-
+		
+		$this->content->text .= 'valueChanged();';
 		$this->content->text .= '</script>';
 
 		return $this->content;

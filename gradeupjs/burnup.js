@@ -179,7 +179,7 @@ function drawPrediction(x, y, data, scale, draw, percentage) { //This could prob
 	}
 }
 
-function drawAverageGrades(x, y, data, scale, draw,index) {
+function drawAverageGrades(x, y, data, scale, draw,index,showAll) {
 	let x1 = x;
 	let y1 = y;
 	let x2 = x1 + (data[index].weight * scale/100);
@@ -191,49 +191,52 @@ function drawAverageGrades(x, y, data, scale, draw,index) {
 		p.stroke({color: 'darkblue', width: 1});
 		p.fill('lightblue');
 		p.opacity(.5);
-		p.click(function() {
-			console.log("onclick drawAverageGrades");
-			var grade = prompt(promptString, '%');
-			if (grade == null || grade == "" || isNaN(grade)) {
-				console.log("User abandoned what-if/didn't enter a valid number");
-			} else {
-				console.log("user entered: " + grade);
-				let whatif = Number(grade);
-				if (whatif > 1) {
-					whatif = whatif/100; //convert to a decimal
+		if (showAll) {
+			p.click(function() {
+				console.log("onclick drawAverageGrades");
+				var grade = prompt(promptString, '%');
+				if (grade == null || grade == "" || isNaN(grade)) {
+					console.log("User abandoned what-if/didn't enter a valid number");
+				} else {
+					console.log("user entered: " + grade);
+					let whatif = Number(grade);
+					if (whatif > 1) {
+						whatif = whatif/100; //convert to a decimal
+					}
+					
+					data[index].score =  whatif;
+					var list = SVG.find('.gradeStuff');
+					list.remove();
+					var list2 = SVG.find('.projectionStuff');
+					list2.remove();
+					var list3 = SVG.find('.temp')
+					list3.remove();
+					drawAssignments(scale, draw,data);
 				}
-				
-				data[index].score =  whatif;
-				var list = SVG.find('.gradeStuff');
+				});
+			p.mouseover(function() {
+				var list = SVG.find('.projectionText')
 				list.remove();
-				var list2 = SVG.find('.projectionStuff');
-				list2.remove();
-				var list3 = SVG.find('.temp')
-				list3.remove();
-				drawAssignments(scale, draw,data);
-			}
+				
+				p.fill('grey');
+				let grade = (data[index].score);
+				let weight = (data[index].weight).toPrecision(3);
+				let average = (data[index].averageScore);
+				text = draw.text(gradeString + ": " + grade*100 +"%, "+  weightString + ": " + weight + "%, "+ averageString + ": " + average*100 + "%");
+				text.x(scale*1.1);
+				text.y(0);
+				text.addClass('temp');
+				text.font({
+					size: scale/25
+				})
 			});
-		p.mouseover(function() {
-			var list = SVG.find('.projectionText')
-			list.remove();
-			
-			p.fill('grey');
-			let grade = (data[index].score);
-			let weight = (data[index].weight).toPrecision(3);
-			let average = (data[index].averageScore);
-			text = draw.text(gradeString + ": " + grade*100 +"%, "+  weightString + ": " + weight + "%, "+ averageString + ": " + average*100 + "%");
-			text.x(scale*1.1);
-			text.y(0);
-			text.addClass('temp');
-			text.font({
-				size: scale/25
-			})
-		});
-		p.mouseout(function() {
-			p.fill('lightblue');
-			var list = SVG.find('.temp')
-			list.remove();
-		});
+			p.mouseout(function() {
+				p.fill('lightblue');
+				var list = SVG.find('.temp')
+				list.remove();
+			});
+		}
+		
 	}
 	
 	return { xs: x2, ys: y2 };
@@ -291,11 +294,11 @@ function drawAssignments(scale, draw, data,showAll=true){
 	let averageX = 0;
 	let averageY = scale;
 	for (let i=0; i<data.length; i++) {
-		let {xs, ys} = drawAverageGrades(averageX, averageY, data, scale, draw,i);
+		let {xs, ys} = drawAverageGrades(averageX, averageY, data, scale, draw,i,showAll);
 		averageX=xs;
 		averageY=ys;
 	}
-	
+
 	if (showAll) {
 		//Draw Student's Current Grade
 		let x = 0;
