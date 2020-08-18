@@ -62,13 +62,36 @@ class block_gradeup extends block_base {
 			$totalCoursePoints = $DB->get_records_sql($getTotalCoursePoints);
 			$totalPoints = key($totalCoursePoints);
 			
+			$getUserRoleInCourse = "SELECT ra.roleid FROM mdl_role_assignments AS ra 
+										LEFT JOIN mdl_user_enrolments AS ue ON ra.userid = ue.userid
+										LEFT JOIN mdl_context AS c ON c.id = ra.contextid 
+										LEFT JOIN mdl_enrol AS e ON e.courseid = c.instanceid AND ue.enrolid = e.id 
+										WHERE  ue.userid = ". $USER->id ." AND e.courseid = ". $course->id ;
+			$userRoleInCourse = $DB->get_records_sql($getUserRoleInCourse);
+			$userRole = key($userRoleInCourse);
+
+
+			$userIDforDataPull = $USER->id;
+			if ($userRole != 5) {
+				$this->content->text .= 'USER IS A NOT A STUDENT!!!';
+				$anyUserIDInCourse = "SELECT g.userid
+										FROM mdl_grade_grades g 
+										INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
+										INNER JOIN mdl_assign a ON a.name=gi.itemname 
+										WHERE gi.courseid = 2";
+				$anyUserID = $DB->get_records_sql($anyUserIDInCourse);
+				$userIDforDataPull = key($anyUserID);
+				$this->content->text .= 'A USER IN THE COURSE IS: ' . $userIDInCourse;
+				$this->content->text .= 'his grades are displayd below:';
+			}
+
 			//Get user grades from the moodle database
 			$getUserGrades = "SELECT q1.itemname, q1.finalgrade, q1.grademax, q1.duedate as due,q2.averagegrade FROM (
 								SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
 									FROM mdl_grade_grades g 
 									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
 									INNER JOIN mdl_assign a ON a.name=gi.itemname 
-									WHERE g.userid = ". $USER->id ." AND gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
+									WHERE g.userid = ". $userIDforDataPull ." AND gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
 									ORDER BY a.duedate
 								) q1 INNER JOIN (
 									SELECT gi.itemname, AVG(finalgrade) as averageGrade
