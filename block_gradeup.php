@@ -73,7 +73,6 @@ class block_gradeup extends block_base {
 
 			$userIDforDataPull = $USER->id;
 			if ($userRole != 5) {
-				$this->content->text .= 'USER IS A NOT A STUDENT!!!';
 				$anyUserIDInCourse = "SELECT g.userid
 										FROM mdl_grade_grades g 
 										INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
@@ -81,8 +80,7 @@ class block_gradeup extends block_base {
 										WHERE gi.courseid = 2";
 				$anyUserID = $DB->get_records_sql($anyUserIDInCourse);
 				$userIDforDataPull = key($anyUserID);
-				$this->content->text .= 'A USER IN THE COURSE IS: ' . $userIDInCourse;
-				$this->content->text .= 'his grades are displayd below:';
+				
 			}
 
 			//Get user grades from the moodle database
@@ -221,7 +219,13 @@ class block_gradeup extends block_base {
 		
 		$this->content->text .= 'var draw2 = SVG().addTo(\'#svgContainer2\').size(700+700*.66,700/2);';
 		
-		$this->content->text .= 'valueChanged();';
+		//this is for teachers and admins so they can see average grades
+		if ($userRole != 5) {
+			$this->content->text .= 'valueChanged(false);'; //don't show grades, just averages
+		} else {
+			$this->content->text .= 'valueChanged();';
+		}
+
 		$this->content->text .= '</script>';
 
 		return $this->content;

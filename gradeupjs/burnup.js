@@ -286,7 +286,7 @@ function drawLegend(scale,draw,fontsize) {
 	
 }
 
-function drawAssignments(scale, draw, data){
+function drawAssignments(scale, draw, data,showAll=true){
 	//Draw Average Student Grades
 	let averageX = 0;
 	let averageY = scale;
@@ -295,28 +295,31 @@ function drawAssignments(scale, draw, data){
 		averageX=xs;
 		averageY=ys;
 	}
-
-	//Draw Student's Current Grade
-	let x = 0;
-	let y = scale;
-	let yourGrades = []; //assume no grades yet -> average of zero
 	
-	for (let i=0; i<data.length; i++) {
-		let {xs, ys} = drawAssignment(x, y, data, scale, draw,i);
-		if (data[i].score != null) {
-			yourGrades.push(data[i].score);
+	if (showAll) {
+		//Draw Student's Current Grade
+		let x = 0;
+		let y = scale;
+		let yourGrades = []; //assume no grades yet -> average of zero
+		
+		for (let i=0; i<data.length; i++) {
+			let {xs, ys} = drawAssignment(x, y, data, scale, draw,i);
+			if (data[i].score != null) {
+				yourGrades.push(data[i].score);
+			}
+			x=xs;
+			y=ys;
 		}
-		x=xs;
-		y=ys;
-	}
 
-	let predictX = 0;
-	let predictY = scale;
-	let averageGrade = yourGrades.reduce(function(a,b) {
-		return a + b;
-	}, 0);
-	averageGrade = averageGrade / (yourGrades.length); 
-	drawPrediction(predictX,predictY,data,scale,draw,averageGrade);
+		let predictX = 0;
+		let predictY = scale;
+		let averageGrade = yourGrades.reduce(function(a,b) {
+			return a + b;
+		}, 0);
+		averageGrade = averageGrade / (yourGrades.length); 
+		drawPrediction(predictX,predictY,data,scale,draw,averageGrade);
+	}
+	
 	
 }
 function drawChart(scale, svg,data){

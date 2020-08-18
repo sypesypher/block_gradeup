@@ -27,7 +27,7 @@
  * 
  */
  
-function valueChanged(refreshdata=true) {
+function valueChanged(showAll=true) {
 	var e = document.getElementById("courseSelection");
 	var s = document.getElementById("scaleSelection");
 	var h = document.getElementById("heatmapSelection");
@@ -48,6 +48,6 @@ function valueChanged(refreshdata=true) {
 	draw2.clear();
 
 	drawChart(scale,draw,data);
-	drawAssignments(scale, draw,data);
+	drawAssignments(scale, draw,data,showAll);
 	drawHeatMap(scale,draw2,data,courseStartDate,courseEndDate,heatmapScale);	
 }
