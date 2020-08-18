@@ -42,7 +42,7 @@
             p.click(function() {
 				console.log("onclick drawassignment");
 				
-				var grade = prompt(promptString, "%");
+				var grade = prompt(promptString, "");
 				if (grade == null || grade == "" || isNaN(grade)) {
 					console.log("User abandoned what-if");
 				} else {
