@@ -19,5 +19,8 @@
   "homepage": "https://github.com/sypesypher/gradeup2#readme",
   "devDependencies": {
     "jest": "^26.0.1"
+  },
+  "dependencies": {
+    "@svgdotjs/svg.js": "^3.0.16"
   }
 }

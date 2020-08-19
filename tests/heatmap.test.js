@@ -14,7 +14,5 @@ test('sums values in an array', () => {
     expect(arraySum1).toBe(10);
 })*/
 
-//test drawHeatmap
-//test plotPoint
-//test drawTextheatmap
+//test drawHeatmap - is this possible
 
