@@ -155,11 +155,12 @@ class block_gradeup extends block_base {
 			$this->content->text .= '</script>';
 		}
 
+		//print_r($CFG->wwwroot);
 		//required import statements
 		$this->content->text .= '<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>'; //SVG.js
-		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/heatmap.js"></script>';
-		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/burnup.js"></script>';
-		$this->content->text .= '<script src="/blocks/gradeup/gradeupjs/valueChanged.js"></script>';
+		$this->content->text .= '<script src="'. $CFG->wwwroot . '/blocks/gradeup/gradeupjs/heatmap.js"></script>';
+		$this->content->text .= '<script src="'. $CFG->wwwroot . '/blocks/gradeup/gradeupjs/burnup.js"></script>';
+		$this->content->text .= '<script src="'. $CFG->wwwroot . '/blocks/gradeup/gradeupjs/valueChanged.js"></script>';
 		
 		//create drop down selection for courses
 		$this->content->text .= '<label for="cars">' . get_string('courseSelection', 'block_gradeup') . '</label>';
