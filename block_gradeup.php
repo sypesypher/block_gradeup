@@ -58,7 +58,7 @@ class block_gradeup extends block_base {
 		foreach ($courses as $course) {
 			
 			//Get the total points in a course to calculate weights of assignments
-			$getTotalCoursePoints = "SELECT SUM(grade) as totalPoints FROM mdl_assign a WHERE a.course=". $course->id ."; ";
+			$getTotalCoursePoints = "SELECT grademax FROM mdl_grade_items WHERE itemtype=\"course\" AND courseid=" . $course->id ."; ";
 			$totalCoursePoints = $DB->get_records_sql($getTotalCoursePoints);
 			$totalPoints = key($totalCoursePoints);
 			
@@ -83,23 +83,23 @@ class block_gradeup extends block_base {
 				
 			}
 
+			
 			//Get user grades from the moodle database
-			$getUserGrades = "SELECT q1.itemname, q1.finalgrade, q1.grademax, q1.duedate as due,q2.averagegrade FROM (
-								SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
+			$getUserGrades = "SELECT q1.itemname , q1.finalgrade, q1.grademax, q2.averageGrade,IFNULL(q3.due,". $course->enddate .") as due FROM (
+								SELECT gi.itemname, g.finalgrade, gi.grademax
 									FROM mdl_grade_grades g 
 									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
-									INNER JOIN mdl_assign a ON a.name=gi.itemname 
 									WHERE g.userid = ". $userIDforDataPull ." AND gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
-									ORDER BY a.duedate
 								) q1 INNER JOIN (
 									SELECT gi.itemname, AVG(finalgrade) as averageGrade
 									FROM mdl_grade_grades g 
 									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
-									INNER JOIN mdl_assign a ON a.name=gi.itemname 
 									WHERE gi.courseid = ". $course->id ." AND gi.itemname IS NOT NULL 
 									GROUP BY itemname
-									ORDER BY gi.itemname
-								) q2 ON q1.itemname=q2.itemname ORDER BY q1.duedate"; 
+								) q2 ON q1.itemname=q2.itemname LEFT OUTER JOIN (
+									SELECT name as itemname,timeclose as due FROM mdl_quiz WHERE course=". $course->id ." UNION
+									SELECT name as itemname,duedate as due FROM mdl_assign WHERE course=". $course->id ."
+								) q3 ON q1.itemname = q3.itemname;"; 
 			$student_grades = $DB->get_records_sql($getUserGrades);
 			//take the database results and format into a PHP grades Object array 
 			foreach ($student_grades as $grade) {

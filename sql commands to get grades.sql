@@ -32,15 +32,15 @@ USE mysql;
 SHOW tables; 
 SELECT * FROM mdl_grade_grades;
 SELECT * FROM mdl_grade_items;
+SELECT * FROM mdl_quiz;
 SELECT * FROM mdl_assign;
 SELECT * FROM mdl_assign_grades;
-SELECT * FROM mdl_grade_items;
-SELECT * FROM mdl_grade_grades_history;
 SELECT * FROM mdl_course;
 SELECT * FROM mdl_role_assignments;
 SELECT * FROM mdl_role;
 SELECT * FROM mdl_user_enrolments;
 SELECT * FROM mdl_context;
+
 
 SELECT * FROM mdl_role_assignments AS ra LEFT JOIN mdl_context as c ON c.id = ra.contextid;
 
@@ -78,51 +78,26 @@ SELECT gi.courseid,g.userid,gi.itemname, g.finalgrade, gi.grademax, a.duedate
     WHERE g.userid = 5 AND gi.courseid = 2 AND gi.itemname IS NOT NULL 
     ORDER BY a.duedate;
 
-/*
-, q1.grademax / SUM(q1.grademax) AS weight 
-*/
 
+SELECT name as itemname,timeclose as due FROM mdl_quiz WHERE course=3 UNION
+SELECT name as itemname,duedate as due FROM mdl_assign WHERE course=3;
 
-/*get grades for a user given a specific class and user id, also gets average grade for an assignment*/
-SELECT q1.itemname as name, q1.finalgrade as score, q1.grademax, q1.duedate,q2.averageGrade FROM (
-	SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
+-- get grades ---------------------------
+SELECT q1.itemname , q1.finalgrade, q1.grademax, q2.averageGrade,IFNULL(q3.due,0) as due FROM (
+	SELECT gi.itemname, g.finalgrade, gi.grademax
 		FROM mdl_grade_grades g 
 		INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
-		INNER JOIN mdl_assign a ON a.name=gi.itemname 
-		WHERE g.userid = 5 AND gi.courseid = 2 AND gi.itemname IS NOT NULL 
-		ORDER BY a.duedate
+		WHERE g.userid = 5 AND gi.courseid = 3 AND gi.itemname IS NOT NULL 
 	) q1 INNER JOIN (
 		SELECT gi.itemname, AVG(finalgrade) as averageGrade
 		FROM mdl_grade_grades g 
 		INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
-		INNER JOIN mdl_assign a ON a.name=gi.itemname 
-		WHERE gi.courseid = 2 AND gi.itemname IS NOT NULL 
+		WHERE gi.courseid = 3 AND gi.itemname IS NOT NULL 
 		GROUP BY itemname
-		ORDER BY gi.itemname
-	) q2 ON q1.itemname=q2.itemname ORDER BY q1.duedate;
-    
-    
-    SELECT q1.itemname as name, q1.finalgrade as score, q1.grademax, q1.duedate,q2.averageGrade FROM (
-		SELECT gi.itemname, g.finalgrade, gi.grademax, a.duedate 
-			FROM mdl_grade_grades g 
-			INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
-			INNER JOIN mdl_assign a ON a.name=gi.itemname 
-			WHERE g.userid = 5 AND gi.courseid = 2 AND gi.itemname IS NOT NULL 
-			ORDER BY a.duedate
-		) q1 INNER JOIN (
-			SELECT gi.itemname, AVG(finalgrade) as averageGrade
-			FROM mdl_grade_grades g 
-			INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
-			INNER JOIN mdl_assign a ON a.name=gi.itemname 
-			WHERE gi.courseid = 2 AND gi.itemname IS NOT NULL 
-			GROUP BY itemname
-			ORDER BY gi.itemname
-		) q2 ON q1.itemname=q2.itemname ORDER BY q1.duedate;
-        
-        SELECT gi.itemname, AVG(finalgrade) as averageGrade
-		FROM mdl_grade_grades g 
-		INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
-		INNER JOIN mdl_assign a ON a.name=gi.itemname 
-		WHERE gi.courseid = 2 AND gi.itemname IS NOT NULL 
-		GROUP BY itemname
-		ORDER BY gi.itemname
+	) q2 ON q1.itemname=q2.itemname LEFT OUTER JOIN (
+		SELECT name as itemname,timeclose as due FROM mdl_quiz WHERE course=3 UNION
+		SELECT name as itemname,duedate as due FROM mdl_assign WHERE course=3
+	) q3 ON q1.itemname = q3.itemname;
+
+SELECT * FROM mdl_grade_items;
+SELECT grademax FROM mdl_grade_items WHERE itemtype="course" AND courseid=3;

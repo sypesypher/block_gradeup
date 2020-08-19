@@ -134,6 +134,7 @@ function drawPrediction(x, y, data, scale, draw, percentage) { //This could prob
 	if (startPointFound) {
 		let MaxLine = draw.polyline([[x3,y3],[x4,y4],[x4,y3]]);
 		MaxLine.stroke({color: 'yellow', width: 2, /**dasharray: '5,5'**/});
+		MaxLine.back();
 		MaxLine.opacity(.5)
 		MaxLine.fill("orange")
 		MaxLine.addClass('gradeStuff');
