@@ -12,7 +12,7 @@ test("default test true", () => {
 
 let data = grades;
 let x = 0;
-let y = 100
+let y = 100 
 let scale = 500;
 var draw = new svgjs.SVG();
 let index = 0;
