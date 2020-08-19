@@ -260,7 +260,7 @@ function drawText(x,y,message,fontsize,draw){
 function drawLegend(scale,draw,fontsize) {
 	let x = 10;
 	let y = 0;
-	legendwidth = scale*.55;
+	legendwidth = scale*.6;
 	//border around the legend
 	var border = draw.polyline([[x-10,y], [x+legendwidth,y], [x+legendwidth,y + scale/3], [x-10,y+scale/3], [x-10,y]]);
 	border.stroke({color: 'gold', width: 3});
