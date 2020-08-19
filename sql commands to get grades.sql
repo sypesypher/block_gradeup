@@ -83,7 +83,7 @@ SELECT name as itemname,timeclose as due FROM mdl_quiz WHERE course=3 UNION
 SELECT name as itemname,duedate as due FROM mdl_assign WHERE course=3;
 
 -- get grades ---------------------------
-SELECT q1.itemname , q1.finalgrade, q1.grademax, q2.averageGrade, IFNULL(q3.due,7) as due FROM (
+SELECT q1.itemname , q1.finalgrade, q1.grademax, q2.averageGrade, IFNULL(q3.due,7) as due, IF(q1.finalgrade IS NULL,1,0) as completed FROM (
 	SELECT gi.itemname, g.finalgrade, gi.grademax
 		FROM mdl_grade_grades g 
 		INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
@@ -99,7 +99,9 @@ SELECT q1.itemname , q1.finalgrade, q1.grademax, q2.averageGrade, IFNULL(q3.due,
 		SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_assign WHERE course=3 UNION
         SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_forum WHERE course=3 UNION
 		SELECT name as itemname,IF(deadline=0,null,deadline) as due FROM mdl_lesson
-	) q3 ON q1.itemname = q3.itemname;
+	) q3 ON q1.itemname = q3.itemname
+    ORDER BY completed,due;
+
 
 
 SELECT name as itemname,timeclose as due FROM mdl_quiz WHERE course=3 UNION

@@ -83,9 +83,18 @@ class block_gradeup extends block_base {
 				
 			}
 
-			
+			//check for mdl_questionnaire plugin:
+			$mdl_questionnaireCheckQuery = 'SHOW TABLES LIKE "mdl_questionnaire';
+			$mdl_questionnaireCheck = $DB->get_records_sql($getUserRoleInCourse);
+			$mdl_questionnaire = key($mdl_questionnaireCheck);
+			$mdl_questionnaireSupportString = "";
+			if ($mdl_questionnaire != null) {
+				//mdl_questionnaire is installed
+				$mdl_questionnaireSupportString = " UNION SELECT name as itemname,closedate as due FROM mdl_questionnaire";
+			}
+
 			//Get user grades from the moodle database
-			$getUserGrades = "SELECT q1.itemname , q1.finalgrade, q1.grademax, q2.averageGrade,IFNULL(q3.due,". $course->enddate .") as due FROM (
+			$getUserGrades = "SELECT q1.itemname , q1.finalgrade, q1.grademax, q2.averageGrade,IFNULL(q3.due,". $course->enddate .") as due, IF(q1.finalgrade IS NULL,1,0) as completed FROM (
 								SELECT gi.itemname, g.finalgrade, gi.grademax
 									FROM mdl_grade_grades g 
 									INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
@@ -100,9 +109,10 @@ class block_gradeup extends block_base {
 									SELECT name as itemname,timeclose as due FROM mdl_quiz WHERE course=". $course->id ." UNION
 									SELECT name as itemname,IF(timeclose=0,null,timeclose) as due FROM mdl_quiz WHERE course=". $course->id ." UNION
 									SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_assign WHERE course=". $course->id ." UNION
-									SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_forum WHERE course=". $course->id ."
+									SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_forum WHERE course=". $course->id ." 
+									" . $mdl_questionnaireSupportString . " 
 								) q3 ON q1.itemname = q3.itemname
-								ORDER BY due;"; 
+								ORDER BY completed,due;"; 
 			$student_grades = $DB->get_records_sql($getUserGrades);
 			//take the database results and format into a PHP grades Object array 
 			foreach ($student_grades as $grade) {

@@ -23,7 +23,7 @@
  */
 
 $plugin->component = 'block_gradeup';  // Recommended since 2.0.2 (MDL-26035). Required since 3.0 (MDL-48494)
-$plugin->version  = 2020081908;  // YYYYMMDDHH (year, month, day, 24-hr time) first version
+$plugin->version  = 2020081910;  // YYYYMMDDHH (year, month, day, 24-hr time) first version
 $plugin->requires = 2015111600; // YYYYMMDDHH Moodle 3.0 required TODO: maybe work on earlier versions? idk this was tested on version moodle 4.0
 //$plugin->maturity = MATURITY_BETA;
 //$plugin->release = 0;
