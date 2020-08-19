@@ -108,4 +108,6 @@ SELECT name as itemname,timeclose as due FROM mdl_quiz WHERE course=3 UNION
 SELECT name as itemname,duedate as due FROM mdl_assign WHERE course=3 UNION
 SELECT name as itemname,duedate as due FROM mdl_forum WHERE course=3;
 
+SELECT name as itemname,deadline as due FROM mdl_lesson;
+
 SELECT grademax FROM mdl_grade_items WHERE itemtype="course" AND courseid=3;
