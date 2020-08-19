@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+header("Cache-Control: max-age=0");
+
 class block_gradeup extends block_base {
 
 	/** @var boolean This variable checks if js is loaded */
