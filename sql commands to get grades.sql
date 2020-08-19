@@ -83,7 +83,7 @@ SELECT name as itemname,timeclose as due FROM mdl_quiz WHERE course=3 UNION
 SELECT name as itemname,duedate as due FROM mdl_assign WHERE course=3;
 
 -- get grades ---------------------------
-SELECT q1.itemname , q1.finalgrade, q1.grademax, q2.averageGrade,IFNULL(q3.due,0) as due FROM (
+SELECT q1.itemname , q1.finalgrade, q1.grademax, q2.averageGrade, IFNULL(q3.due,7) as due FROM (
 	SELECT gi.itemname, g.finalgrade, gi.grademax
 		FROM mdl_grade_grades g 
 		INNER JOIN mdl_grade_items gi ON gi.id = g.itemid 
@@ -95,9 +95,17 @@ SELECT q1.itemname , q1.finalgrade, q1.grademax, q2.averageGrade,IFNULL(q3.due,0
 		WHERE gi.courseid = 3 AND gi.itemname IS NOT NULL 
 		GROUP BY itemname
 	) q2 ON q1.itemname=q2.itemname LEFT OUTER JOIN (
-		SELECT name as itemname,timeclose as due FROM mdl_quiz WHERE course=3 UNION
-		SELECT name as itemname,duedate as due FROM mdl_assign WHERE course=3
+		SELECT name as itemname,IF(timeclose=0,null,timeclose) as due FROM mdl_quiz WHERE course=3 UNION
+		SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_assign WHERE course=3 UNION
+        SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_forum WHERE course=3
 	) q3 ON q1.itemname = q3.itemname;
 
-SELECT * FROM mdl_grade_items;
+SELECT * FROM mdl_grade_items WHERE courseid=3;
+SELECT name as itemname,duedate as due FROM mdl_forum WHERE course=3;
+SELECT * FROM mdl_forum WHERE course=3;
+
+SELECT name as itemname,timeclose as due FROM mdl_quiz WHERE course=3 UNION
+SELECT name as itemname,duedate as due FROM mdl_assign WHERE course=3 UNION
+SELECT name as itemname,duedate as due FROM mdl_forum WHERE course=3;
+
 SELECT grademax FROM mdl_grade_items WHERE itemtype="course" AND courseid=3;
