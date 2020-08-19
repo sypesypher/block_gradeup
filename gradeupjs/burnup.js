@@ -27,7 +27,7 @@
  * 
  */
 
- function drawAssignment(x, y, data, scale, draw,index) {
+ function drawAssignment(x, y, data, scale, draw,index,showAll=true) {
             let x1 = x;
             let y1 = y;
             let x2 = x1 + (data[index].weight * scale/100);
@@ -83,13 +83,6 @@
 				list.remove();
 			});
 
-            draw.line(x1 + (x2-x1)/2 ,scale,x1 + (x2-x1)/2,scale+10).stroke({color: 'blue', width: 1, linecap: 'round'})
-			var title = draw.text(data[index].itemname);
-			title.addClass("gradeStuff");
-			title.x(x1 + (x2-x1)/4);
-            title.y(scale+20);
-            title.rotate(40);
-            
             return { xs: x2, ys: y2 };
 }     
         
@@ -244,7 +237,14 @@ function drawAverageGrades(x, y, data, scale, draw,index,showAll) {
 		
 		
 	}
-	
+
+	draw.line(x1 + (x2-x1)/2 ,scale,x1 + (x2-x1)/2,scale+10).stroke({color: 'blue', width: 1, linecap: 'round'})
+			var title = draw.text(data[index].itemname);
+			title.addClass("gradeStuff");
+			title.x(x1 + (x2-x1)/4);
+            title.y(scale+20);
+			title.rotate(40);
+			
 	return { xs: x2, ys: y2 };
 }
 
