@@ -101,7 +101,8 @@ class block_gradeup extends block_base {
 									SELECT name as itemname,IF(timeclose=0,null,timeclose) as due FROM mdl_quiz WHERE course=". $course->id ." UNION
 									SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_assign WHERE course=". $course->id ." UNION
 									SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_forum WHERE course=". $course->id ."
-								) q3 ON q1.itemname = q3.itemname;"; 
+								) q3 ON q1.itemname = q3.itemname
+								ORDER BY due;"; 
 			$student_grades = $DB->get_records_sql($getUserGrades);
 			//take the database results and format into a PHP grades Object array 
 			foreach ($student_grades as $grade) {

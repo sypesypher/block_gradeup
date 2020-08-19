@@ -97,17 +97,14 @@ SELECT q1.itemname , q1.finalgrade, q1.grademax, q2.averageGrade, IFNULL(q3.due,
 	) q2 ON q1.itemname=q2.itemname LEFT OUTER JOIN (
 		SELECT name as itemname,IF(timeclose=0,null,timeclose) as due FROM mdl_quiz WHERE course=3 UNION
 		SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_assign WHERE course=3 UNION
-        SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_forum WHERE course=3
+        SELECT name as itemname,IF(duedate=0,null,duedate) as due FROM mdl_forum WHERE course=3 UNION
+		SELECT name as itemname,IF(deadline=0,null,deadline) as due FROM mdl_lesson
 	) q3 ON q1.itemname = q3.itemname;
 
-SELECT * FROM mdl_grade_items WHERE courseid=3;
-SELECT name as itemname,duedate as due FROM mdl_forum WHERE course=3;
-SELECT * FROM mdl_forum WHERE course=3;
 
 SELECT name as itemname,timeclose as due FROM mdl_quiz WHERE course=3 UNION
 SELECT name as itemname,duedate as due FROM mdl_assign WHERE course=3 UNION
-SELECT name as itemname,duedate as due FROM mdl_forum WHERE course=3;
-
+SELECT name as itemname,duedate as due FROM mdl_forum WHERE course=3 UNION
 SELECT name as itemname,deadline as due FROM mdl_lesson;
 
 SELECT grademax FROM mdl_grade_items WHERE itemtype="course" AND courseid=3;
