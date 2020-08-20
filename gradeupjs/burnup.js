@@ -446,7 +446,3 @@ function drawChart(scale, svg,data,showAll){
 		size: fontsize
 	})
 }
-
-module.exports = drawAssignment;
-module.exports = drawPrediction;
-module.exports = drawAverageGrades;
