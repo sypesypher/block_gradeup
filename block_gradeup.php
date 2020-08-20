@@ -225,7 +225,9 @@ class block_gradeup extends block_base {
 		$this->content->text .= 'let heatMapString = \'' . get_string('heatmapLabel', 'block_gradeup') . '\';';
 		$this->content->text .= 'let percentOfGradeString = \'' . get_string('percentOfGradeString', 'block_gradeup') . '\';';
 		$this->content->text .= 'let dueDateString = \'' . get_string('dueDateString', 'block_gradeup') . '\';';
-
+		$this->content->text .= 'let yourFinalGradeString = \'' . get_string('yourFinalGradeString', 'block_gradeup') . '\';';
+		$this->content->text .= 'let classAverageOfAvailableData = \'' . get_string('classAverageOfAvailableData', 'block_gradeup') . '\';';
+		
 		$this->content->text .= 'function getData(courseid) {'; //Normally a call to get data, but this will do for an example
 		$this->content->text .=     'let gradeString = "grades" + courseid;';
 		$this->content->text .=     'let data = allGrades[gradeString];';

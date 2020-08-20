@@ -58,12 +58,16 @@
 					list2.remove();
 					var list3 = SVG.find('.temp')
 					list3.remove();
+					//var list2 = SVG.find('.finalGradeStuff')
+					list2.remove();
 					drawAssignments(scale,draw,data);
 				}
             });
 			p.mouseover(function() {
 				var list = SVG.find('.projectionText')
 				list.remove();
+				var list2 = SVG.find('.finalGradeStuff')
+				//list2.remove();
 				
 				p.fill('grey');
 				let grade = (data[index].score);
@@ -318,6 +322,30 @@ function drawAssignments(scale, draw, data,showAll=true){
 			}
 			x=xs;
 			y=ys;
+			if (i == (data.length-1)){ //if this is the last assignment
+				if (data[i].score != null) { //and it has a grade
+					var list2 = SVG.find('.finalGradeStuff')
+					list2.remove();
+					
+					let maxGrade = 1 - y/scale;
+					text = draw.text(yourFinalGradeString + ": " + (maxGrade*100).toPrecision(3) + "%");
+					text.x(scale*1.05);
+					text.y(scale*.5);
+					text.addClass('finalGradeStuff');
+					text.font({
+						size: scale/25
+					})
+
+					let classAverageGrade = 1 - averageY/scale;
+					text = draw.text(classAverageOfAvailableData + ": " + (classAverageGrade*100).toPrecision(3) + "%");
+					text.x(scale*1.05);
+					text.y(scale*.55);
+					text.addClass('finalGradeStuff');
+					text.font({
+						size: scale/25
+					})
+				}
+			}
 		}
 
 		let predictX = 0;
@@ -343,7 +371,7 @@ function drawChart(scale, svg,data,showAll=true){
 		let buttony = scale/3 + scale/25;
 		
 		drawText(buttonx+ scale*.01,buttony-scale*.01, resetButtonString, scale/25, draw);
-		let button = draw.polygon([[0,buttony] , [scale/5, buttony], [scale/5, buttony + scale /15], [ 0, buttony + scale /15]]);
+		let button = draw.polygon([[0,buttony] , [scale/5+scale*.03, buttony], [scale/5+scale*.03, buttony + scale /15], [ 0, buttony + scale /15]]);
 		button.fill('lightblue');
 		button.opacity(.5);
 		button.click(function() {
@@ -353,6 +381,8 @@ function drawChart(scale, svg,data,showAll=true){
 				}
 				var list = SVG.find('.gradeStuff')
 				list.remove();
+				var list2 = SVG.find('.finalGradeStuff')
+				list2.remove();
 				drawAssignments(scale, draw,data);
 				
 			});
