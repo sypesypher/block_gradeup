@@ -60,7 +60,7 @@
 					list3.remove();
 					//var list2 = SVG.find('.finalGradeStuff')
 					list2.remove();
-					drawAssignments(scale,draw,data);
+					drawAssignments(scale,draw,data,showAll);
 				}
             });
 			p.mouseover(function() {
@@ -209,7 +209,7 @@ function drawAverageGrades(x, y, data, scale, draw,index,showAll) {
 					list2.remove();
 					var list3 = SVG.find('.temp')
 					list3.remove();
-					drawAssignments(scale, draw,data);
+					drawAssignments(scale, draw,data,showAll);
 				}
 				});
 		}
@@ -299,7 +299,7 @@ function drawLegend(scale,draw,fontsize) {
 	
 }
 
-function drawAssignments(scale, draw, data,showAll=true){
+function drawAssignments(scale, draw, data,showAll){
 	//Draw Average Student Grades
 	let averageX = 0;
 	let averageY = scale;
@@ -316,7 +316,7 @@ function drawAssignments(scale, draw, data,showAll=true){
 		let yourGrades = []; //assume no grades yet -> average of zero
 		
 		for (let i=0; i<data.length; i++) {
-			let {xs, ys} = drawAssignment(x, y, data, scale, draw,i);
+			let {xs, ys} = drawAssignment(x, y, data, scale, draw,i,showAll);
 			if (data[i].score != null) {
 				yourGrades.push(data[i].score);
 			}
@@ -359,7 +359,7 @@ function drawAssignments(scale, draw, data,showAll=true){
 	
 	
 }
-function drawChart(scale, svg,data,showAll=true){
+function drawChart(scale, svg,data,showAll){
 	var draw = svg;
 	var scale = scale;
 	
@@ -383,7 +383,7 @@ function drawChart(scale, svg,data,showAll=true){
 				list.remove();
 				var list2 = SVG.find('.finalGradeStuff')
 				list2.remove();
-				drawAssignments(scale, draw,data);
+				drawAssignments(scale, draw,data,showAll);
 				
 			});
 		button.mouseover(function() {
@@ -446,3 +446,7 @@ function drawChart(scale, svg,data,showAll=true){
 		size: fontsize
 	})
 }
+
+module.exports = drawAssignment;
+module.exports = drawPrediction;
+module.exports = drawAverageGrades;

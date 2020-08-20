@@ -1,9 +1,14 @@
 //How to run the tests: npx jest test --watchAll
 //from the top level directory
 
-const burnup = require('../gradeupjs/burnup.js');
-const grades = require('../gradeupjs/grades2.js');
-const svgjs = require('./svgjs/svg.js');
+//var burnup = require('../gradeupjs/burnup');
+//var grades = require('../gradeupjs/grades2');
+
+import * as burnup from "../gradeupjs/burnup";
+import * as grades from "../gradeupjs/grades2";
+
+jest.mock("../gradeupjs/burnup.js");
+
 
 test("default test true", () => {
     expect(true).toBeTruthy();
@@ -14,13 +19,13 @@ let data = grades;
 let x = 0;
 let y = 100 
 let scale = 500;
-var draw = new svgjs.SVG();
+var draw = "notdefined";
 let index = 0;
 let showAll = false;
 
 test("drawAverage test", () => {
     //expect(true).toBeTruthy();
-    burnup.drawAverageGrades(x, y, data, scale, draw,index,showAll);
+    drawAverageGrades(x, y, data, scale, draw,index,showAll);
 })
 
 test("drawPrediction test", () => {

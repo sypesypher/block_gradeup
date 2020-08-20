@@ -2,6 +2,7 @@
   "name": "gradeup2",
   "version": "1.0.0",
   "description": "Javascript plugin for moodle display yada yada",
+  "type":"module",
   "main": "burnup.js",
   "scripts": {
     "test": "jest --watchAll"
