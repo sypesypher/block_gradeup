@@ -85,6 +85,10 @@ class block_gradeup extends block_base {
 				
 			}
 
+			
+			//NOTE: All grade types will be supported, but if they have not had an updated entry to the query to pull in the correct
+			//due date, then they will default to be due at the end of the course, if using plugin grade types or other grades not supported by default
+			//you must add a similar query as below for that grade object
 			//check for mdl_questionnaire plugin:
 			$mdl_questionnaireCheckQuery = 'SHOW TABLES LIKE "mdl_questionnaire';
 			$mdl_questionnaireCheck = $DB->get_records_sql($getUserRoleInCourse);
