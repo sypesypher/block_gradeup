@@ -1,6 +1,6 @@
 //How to run the tests: npx jest test --watchAll
 //from the top level directory
-
+//npx test jest --watchAll --verbose false
 
 let grades = [
     {
@@ -42,7 +42,8 @@ function drawAssignment(x, y, data, scale, draw,index,showAll=true) {
     let x2 = x1 + (data[index].weight * scale/100);
     let y2 = y1 - (data[index].score * data[index].weight)*scale/100;
     let lineString = `${x1},${scale} ${x1},${y1} ${x2},${y2} ${x2},${scale}`;
-    let p = draw.polygon(lineString);
+	/*
+	let p = draw.polygon(lineString);
     p.stroke({color: 'darkblue', width: 1});
     p.fill('blue');
     p.opacity(.5);
@@ -95,7 +96,7 @@ function drawAssignment(x, y, data, scale, draw,index,showAll=true) {
         var list = SVG.find('.temp')
         list.remove();
     });
-
+	*/
     return { xs: x2, ys: y2 };
 }   
 function drawPrediction(x, y, data, scale, draw, percentage) { //This could probably be done better, but works 
@@ -136,9 +137,10 @@ function drawPrediction(x, y, data, scale, draw, percentage) { //This could prob
 		}
 		
 	} 
+	/*
 	if (startPointFound) {
 		let MaxLine = draw.polyline([[x3,y3],[x4,y4],[x4,y3]]);
-		MaxLine.stroke({color: 'yellow', width: 2, /**dasharray: '5,5'**/});
+		MaxLine.stroke({color: 'yellow', width: 2});
 		MaxLine.back();
 		MaxLine.opacity(.5)
 		MaxLine.fill("orange")
@@ -183,6 +185,10 @@ function drawPrediction(x, y, data, scale, draw, percentage) { //This could prob
 		let predictionLine = draw.line(x3,y3,x5,y5).stroke({color: 'blue', width: 2, dasharray: '5,5'});
 		predictionLine.addClass('gradeStuff');
 	}
+	*/
+
+	return { xs: x1, ys: y1 };
+
 }
 
 function drawAverageGrades(x, y, data, scale, draw,index,showAll) {
@@ -191,6 +197,7 @@ function drawAverageGrades(x, y, data, scale, draw,index,showAll) {
 	let x2 = x1 + (data[index].weight * scale/100);
 	let y2 = y1 - (data[index].averageScore * data[index].weight)*scale/100;
 	let lineString = `${x1},${scale} ${x1},${y1} ${x2},${y2} ${x2},${scale}`;
+	/*
 	if (data[index].averageScore != null) {
 		let p = draw.polygon(lineString);
 		p.addClass("gradeStuff");
@@ -256,9 +263,10 @@ function drawAverageGrades(x, y, data, scale, draw,index,showAll) {
 			title.x(x1 + (x2-x1)/4);
             title.y(scale+20);
 			title.rotate(40);
-			
+	*/		
 	return { xs: x2, ys: y2 };
 }
+
 //copy of all Lang Strings
     let promptString = 'Please enter a What-IF Grade';
     let gradeString = 'Grade';
@@ -290,18 +298,139 @@ let scale = 500;
 var draw = "notdefined";
 let index = 0;
 let showAll = false;
+let percentage = .5;
 
-test("drawAverage test", () => {
+test("DrawAverageGrades Test1", () => {
     //expect(true).toBeTruthy();
-    drawAverageGrades(x, y, data, scale, draw,index,showAll);
+	let {xs, ys} =drawAverageGrades(x, y, data, scale, draw,index,showAll);
+	let test1= (xs == 25);
+	let test2= (ys == 80);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
 })
 
-test("drawPrediction test", () => {
+test("DrawAverageGrades Test2", () => {
     //expect(true).toBeTruthy();
-    drawPrediction(x, y, data, scale, draw, percentage);
+	let {xs, ys} =drawAverageGrades(x, y, data, scale, draw,1,showAll);
+	let test1= (Math.round(xs) == 37);
+	let test2= (Math.round(ys) == 71);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
 })
 
-test("drawAssignment Calculations", () => {
+test("DrawAverageGrades Test3", () => {
     //expect(true).toBeTruthy();
-    drawAssignment(x, y, data, scale, draw,index);
+	let {xs, ys} =drawAverageGrades(x, y, data, scale, draw,5,showAll);
+	let test1= (Math.round(xs) == 100);
+	let test2= (Math.round(ys) == 20);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawAverageGrades Test4", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawAverageGrades(x, y, data, scale, draw,6,showAll);
+	let test1= (Math.round(xs) == 25);
+	let test2= (Math.round(ys) == 80);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawAssignment Test1", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawAssignment(0, 200, data, scale, draw,0,showAll);
+	let test1= (Math.round(xs) == 25);
+	let test2= (Math.round(ys) == 183);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawAssignment Test2", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawAssignment(50, 89, data, scale, draw,7,showAll);
+	let test1= (Math.round(xs) == 75);
+	let test2= (Math.round(ys) == 72);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawAssignment Test3", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawAssignment(0, 200, data, scale, draw,5,showAll);
+	let test1= (Math.round(xs) == 100);
+	let test2= (Math.round(ys) == 130);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawAssignment Test4", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawAssignment(0, 100, data, scale, draw,3,showAll);
+	let test1= (Math.round(xs) == 25);
+	let test2= (Math.round(ys) == 83);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawAssignment Test5", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawAssignment(0, 300, data, scale, draw,0,showAll);
+	let test1= (Math.round(xs) == 25);
+	let test2= (Math.round(ys) == 283);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawPrediction Test0", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawPrediction(x, y, data, scale, draw, percentage);
+	let test1= (Math.round(xs) == 350);
+	let test2= (Math.round(ys) == -145);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawPrediction Test1", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawPrediction(50, 80, data, scale, draw, percentage);
+	let test1= (Math.round(xs) == 400);
+	let test2= (Math.round(ys) == -165);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawPrediction Test2", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawPrediction(80, 200, data, scale, draw, percentage);
+	let test1= (Math.round(xs) == 430);
+	let test2= (Math.round(ys) == -45);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawPrediction Test3", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawPrediction(0, 0, data, scale, draw, percentage);
+	let test1= (Math.round(xs) == 350);
+	let test2= (Math.round(ys) == -245);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawPrediction Test4", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawPrediction(1000, 1000, data, 700, draw, percentage);
+	let test1= (Math.round(xs) == 1490);
+	let test2= (Math.round(ys) == 657);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
+})
+
+test("DrawPrediction Test5", () => {
+    //expect(true).toBeTruthy();
+	let {xs, ys} =drawPrediction(x, y, data, 100, draw, percentage);
+	let test1= (Math.round(xs) == 70);
+	let test2= (Math.round(ys) == 51);
+	expect(test1).toBeTruthy();
+	expect(test2).toBeTruthy();
 })
