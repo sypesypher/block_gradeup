@@ -398,10 +398,10 @@ function drawChart(scale, svg,data,showAll){
 	var border = draw.polyline(`0,${scale} ${scale},${scale} ${scale},0 0,${scale}`);
 	border.stroke({color: 'grey', width: 2});
 	border.fill('none');
-	var lineAGrade = draw.line(scale*.9, scale/10, scale, scale/10).stroke({ color: '#3399ff', width: 1, linecap: 'round' });
-	var lineBGrade = draw.line(scale*.8, scale*2/10, scale, scale*2/10).stroke({ color: '#3399ff', width: 1, linecap: 'round' });
-	var lineCGrade = draw.line(scale*.7, scale*3/10, scale, scale*3/10).stroke({ color: '#3399ff', width: 1, linecap: 'round' });
-	var lineDGrade = draw.line(scale*.6, scale*4/10, scale, scale*4/10).stroke({ color: '#3399ff', width: 1, linecap: 'round' });
+	var lineAGrade = draw.line(0, scale, scale, scale/10).stroke({ color: '#3399ff', width: 1, linecap: 'round' });
+	var lineBGrade = draw.line(0, scale, scale, scale*2/10).stroke({ color: '#3399ff', width: 1, linecap: 'round' });
+	var lineCGrade = draw.line(0, scale, scale, scale*3/10).stroke({ color: '#3399ff', width: 1, linecap: 'round' });
+	var lineDGrade = draw.line(0, scale, scale, scale*4/10).stroke({ color: '#3399ff', width: 1, linecap: 'round' });
 	
 	var fontsize = scale/25;
 	var fontFamily = 'Arial';
